@@ -1,0 +1,37 @@
+drop table if exists student;
+drop table if exists degree_program;
+
+-- TODO: professor
+-- TODO: roles
+-- TODO: grades
+
+create table degree_program (
+    id serial primary key,
+    name varchar(128)
+);
+
+create table student (
+    id varchar(8) primary key,
+    name varchar(64) not null,
+    birth_date date not null,
+    enrolled_in serial references degree_program(id),
+    enrolled_since date not null default now()
+    -- TODO: password
+);
+
+insert into degree_program(id, name) values(1, 'Wirtschaftsinformatik');
+insert into degree_program(id, name) values(2, 'Software & Information Engineering');
+insert into degree_program(id, name) values(3, 'Medieninformatik');
+insert into degree_program(id, name) values(4, 'Technische Informatik');
+insert into degree_program(id, name) values(5, 'Medizinische Informatik');
+insert into degree_program(id, name) values(6, 'Maschinenbau');
+insert into degree_program(id, name) values(7, 'Elektrotechnik');
+
+insert into student(id, name, birth_date, enrolled_in, enrolled_since)
+    values('11940303', 'Benjamin Auinger', '1999-04-29', 1, '2020-04-01');
+insert into student(id, name, birth_date, enrolled_in, enrolled_since)
+    values('12443498', 'Benjamin Weber', '2001-01-01', 1, '2020-09-01');
+insert into student(id, name, birth_date, enrolled_in, enrolled_since)
+    values('11244343', 'Nicolas Eder', '1999-01-01', 3, '2020-09-01');
+insert into student(id, name, birth_date, enrolled_in, enrolled_since)
+    values('11230803', 'Kristof Cserpes', '1999-01-01', 4, '2020-09-01');
