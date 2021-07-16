@@ -1,4 +1,4 @@
-package cli;
+ package cli;
 
 import storage.PostgresConnectionFactory;
 import student.storage.PostgreSqlStudentRepository;

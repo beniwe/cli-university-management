@@ -2,21 +2,31 @@ drop table if exists student;
 drop table if exists degree_program;
 
 -- TODO: professor
+create table professor (
+    -- Matrikelnummer
+        id varchar(7) primary key check (length(id) = 7),
+        name varchar(64) not null,
+        birth_date date not null,
+)
 -- TODO: roles
 -- TODO: grades
+-- TODO: courses
 
+-- Studiengang
 create table degree_program (
     id serial primary key,
     name varchar(128)
 );
 
 create table student (
-    id varchar(8) primary key,
+    -- Matrikelnummer
+    id varchar(8) primary key check (length(id) = 8),
     name varchar(64) not null,
     birth_date date not null,
     enrolled_in serial references degree_program(id),
-    enrolled_since date not null default now()
-    -- TODO: password
+    enrolled_since date not null default now(),
+    password varchar(50) not null,
+    course_assistant boolean not null
 );
 
 insert into degree_program(id, name) values(1, 'Wirtschaftsinformatik');

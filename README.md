@@ -34,12 +34,16 @@ elected by a Professor to become a course assistant.
 In order to become a course assisant, a student has to be currently enrolled in the respective course.
 
 Assistants have some special rights: they can grade other students within the course.
-Because great power comes with great responsibility, assistants are rewarded 
+Because great power comes with great responsibility, assistants are rewarded. 
+
+When getting graded, an assistant always receives `grade + 1` except for when the `grade = 5`.
 
 ### Professors
 
 Professors hold multiple courses. They can create new courses 
 and grade students for courses that they hold.
+
+Professors have an ID (length = 7) and a name.
 
 ### Courses
 
