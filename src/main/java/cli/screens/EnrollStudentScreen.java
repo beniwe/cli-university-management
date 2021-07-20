@@ -22,6 +22,9 @@ public class EnrollStudentScreen implements Screen {
         System.out.print("Name: ");
         String name = in.nextLine();
 
+        System.out.print("Password: ");
+        String password = in.nextLine();
+
         System.out.print("Date of birth: ");
         LocalDate birthDate = LocalDate.parse(in.nextLine());
 
@@ -29,9 +32,19 @@ public class EnrollStudentScreen implements Screen {
         int courseId = in.nextInt();
         in.nextLine();
 
+        System.out.print("Course assistant (Y/N): ");
+        String anwser = in.nextLine();
+        boolean courseAssistant;
+
+        if (anwser.equals("Y")) courseAssistant = true;
+
+        else if (anwser.equals("N")) courseAssistant = false;
+
+        else throw new IllegalArgumentException("wrong input");
+
         LocalDate enrolledSince = LocalDate.now();
 
-        Student studentToEnroll = new Student(id, name, birthDate, courseId, enrolledSince);
+        Student studentToEnroll = new Student(id, name, birthDate, courseId, enrolledSince, password, courseAssistant);
 
         new EnrollStudentCommand(studentRepository, studentToEnroll)
                 .execute();
