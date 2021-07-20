@@ -1,13 +1,33 @@
 drop table if exists student;
 drop table if exists degree_program;
+-- add drop tables
 
--- TODO: professor
---create table professor (
-    -- Matrikelnummer
-        --id varchar(7) primary key check (length(id) = 7),
-        --name varchar(64) not null,
-        --birth_date date not null,
---)
+create table professor (
+    id varchar(7) primary key check (length(id) = 7),
+    name varchar(64) not null,
+    birth_date date not null
+);
+
+create table course (
+    id varchar(10) primary key,
+    professor_id references professor(id)
+);
+
+create table roles (
+    name varchar(10) primary key
+);
+
+create table students_roles (
+    student_id varchar(8) references student(id),
+    role_name varchar(10) references roles(name),
+    primary key (student_id, role_name) -- composite key
+);
+
+insert into roles(name) values('assistant');
+insert into student_roles(student_id, role_name) values ('11940303', 'assistant');
+insert into student_roles(student_id, role_name) values ('11940303', 'student');
+insert into student_roles(student_id, role_name) values ('11940323', 'assistant');
+
 -- TODO: roles
 -- TODO: grades
 -- TODO: courses

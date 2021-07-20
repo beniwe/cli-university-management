@@ -33,12 +33,12 @@ public class EnrollStudentScreen implements Screen {
         in.nextLine();
 
         System.out.print("Course assistant (Y/N): ");
-        String anwser = in.nextLine();
+        String answer = in.nextLine();
         boolean courseAssistant;
 
-        if (anwser.equals("Y")) courseAssistant = true;
+        if (answer.equals("Y")) courseAssistant = true;
 
-        else if (anwser.equals("N")) courseAssistant = false;
+        else if (answer.equals("N")) courseAssistant = false;
 
         else throw new IllegalArgumentException("wrong input");
 
