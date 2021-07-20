@@ -20,7 +20,9 @@ public class PostgreSqlStudentRepository implements StudentRepository {
                 record.getName(),
                 record.getBirthDate(),
                 record.getEnrolledIn(),
-                record.getEnrolledSince()
+                record.getEnrolledSince(),
+                record.getPassword(),
+                record.getCourseAssistant()
         );
     }
 
