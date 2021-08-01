@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'nu.studer.jooq' version '6.0'
+    id "com.github.sherter.google-java-format" version "0.9" // format all *.java files: $ ./gradlew googleJavaFormat
 }
 
 group 'org.example'

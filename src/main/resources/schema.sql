@@ -1,5 +1,6 @@
 drop table if exists student;
 drop table if exists degree_program;
+-- add drop tables
 
 -- TODO: professor
 create table professor (
@@ -7,10 +8,8 @@ create table professor (
         professor_id varchar(7) primary key check (length(id) = 7),
         name varchar(64) not null,
         birth_date date not null
+        is_admin boolean
 );
--- TODO: roles
--- TODO: grades
--- TODO: courses
 
 -- Studiengang
 create table degree_program (
@@ -26,7 +25,7 @@ create table student (
     enrolled_in serial references degree_program(id),
     enrolled_since date not null default now(),
     password varchar(50) not null,
-    course_assistant boolean
+    is_course_assistant boolean
 );
 
 create table courses (
