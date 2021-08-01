@@ -1,5 +1,6 @@
 package student.command;
 
+import Exceptions.StudentAlreadyEnrolledException;
 import command.Command;
 import org.example.models.tables.pojos.Student;
 import student.storage.StudentRepository;
@@ -21,6 +22,10 @@ public class EnrollStudentCommand implements Command {
         }
 
         // TODO: catch and identify duplicate key exception and throw StudentAlreadyEnrolledException instead.
-        this.studentRepository.enroll(student);
+        try {
+            this.studentRepository.enroll(student);
+        } catch (StudentAlreadyEnrolledException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -42,6 +42,7 @@ public class EnrollStudentScreen implements Screen {
 
         else throw new IllegalArgumentException("wrong input");
 
+
         LocalDate enrolledSince = LocalDate.now();
 
         Student studentToEnroll = new Student(id, name, birthDate, courseId, enrolledSince, password, courseAssistant);

@@ -5,6 +5,10 @@ import static org.example.models.Tables.STUDENT;
 import org.example.models.tables.pojos.Student;
 import org.example.models.tables.records.StudentRecord;
 import org.jooq.DSLContext;
+
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 
 public class PostgreSqlStudentRepository implements StudentRepository {
@@ -14,7 +18,7 @@ public class PostgreSqlStudentRepository implements StudentRepository {
         this.sql = sql;
     }
 
-    private Student recordToStudent(StudentRecord record) {
+    private static Student recordToStudent(StudentRecord record) {
         return new Student(
                 record.getId(),
                 record.getName(),
@@ -46,6 +50,41 @@ public class PostgreSqlStudentRepository implements StudentRepository {
                 .returning(STUDENT.asterisk())
                 .fetchOne();
 
-        return this.recordToStudent(record);
+        return recordToStudent(record);
+    }
+
+    @Override
+    public Student remove(String id) {
+        if (id.length() != 8) {
+            throw new IllegalArgumentException("wrong input");
+        }
+
+        var toRemove = sql.deleteFrom(STUDENT).where(STUDENT.ID.eq(id)).returning(STUDENT.asterisk()).fetchOne();
+
+        return this.recordToStudent(toRemove);
+
+
+    }
+
+    public static String passwordHashing(String password) {
+
+        try {
+            MessageDigest hashFunction = MessageDigest.getInstance("SHA");
+
+            hashFunction.update(password.getBytes());
+
+            byte[] result = hashFunction.digest();
+            String hashedPassword = "";
+
+            for (byte currByte : result) {
+                hashedPassword += String.format("%02x", currByte);
+            }
+
+            return hashedPassword;
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

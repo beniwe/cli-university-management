@@ -1,5 +1,6 @@
 package student.query;
 
+import Exceptions.StudentAlreadyEnrolledException;
 import org.example.models.tables.pojos.Student;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -11,9 +12,15 @@ class FindStudentQueryTest {
     @Test
     void execute() {
         var repository = new InMemoryStudentRepository();
-        var expectedId = "1";
+        var expectedId = "12345678";
         var expectedName = "Max Mustermann";
-        repository.enroll(new Student(expectedId, expectedName, LocalDate.now(), 1, LocalDate.now()));
+        var expectedPassword = "123";
+
+        try {
+            repository.enroll(new Student(expectedId, expectedName, LocalDate.now(), 1, LocalDate.now(), expectedPassword, false));
+        } catch (StudentAlreadyEnrolledException e) {
+            e.printStackTrace();
+        }
 
         var findStudentQuery = new FindStudentQuery(repository, "1");
         var student = findStudentQuery.execute();
