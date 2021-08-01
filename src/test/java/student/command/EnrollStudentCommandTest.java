@@ -37,4 +37,7 @@ class EnrollStudentCommandTest {
         Assertions.assertEquals(expectedPassword,studentInRepo.getPassword());
     }
 
+    void idCheck(){
+    }
+
 }
