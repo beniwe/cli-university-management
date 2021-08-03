@@ -1,7 +1,9 @@
 package student.storage;
 
 import static org.example.models.Tables.STUDENT;
+import static org.jooq.impl.DSL.max;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.example.models.tables.pojos.Student;
 import org.example.models.tables.records.StudentRecord;
@@ -17,18 +19,18 @@ public class PostgreSqlStudentRepository implements StudentRepository {
 
   private static Student recordToStudent(StudentRecord record) {
     return new Student(
-        record.getId(),
+        record.getStudentId(),
         record.getName(),
         record.getBirthDate(),
         record.getEnrolledIn(),
         record.getEnrolledSince(),
         record.getPassword(),
-        record.getCourseAssistant());
+        record.getIsCourseAssistant());
   }
 
   @Override
-  public Optional<Student> findById(String id) {
-    var student = sql.fetchOne(STUDENT, STUDENT.ID.eq(id));
+  public Optional<Student> findStudentById(Long id) {
+    var student = sql.fetchOne(STUDENT, STUDENT.STUDENT_ID.eq(id));
     if (student == null) {
       return Optional.empty();
     }
@@ -37,39 +39,62 @@ public class PostgreSqlStudentRepository implements StudentRepository {
   }
 
   @Override
+  public Student studentLoginCheck(Long id, String hashedPassword) {
+    var maybeStudent = this.findStudentById(id);
+
+    if (maybeStudent.isEmpty()) {
+      throw new IllegalArgumentException("wrong ID");
+    }
+
+    var student = maybeStudent.get();
+
+    if (!student.getPassword().equals(hashedPassword)) {
+      throw new IllegalArgumentException("wrong Password");
+    }
+
+    return student;
+
+  }
+
+  @Override
   public Student enroll(Student student) throws DataAccessException {
     var record =
         sql.insertInto(
                 STUDENT,
-                STUDENT.ID,
                 STUDENT.NAME,
                 STUDENT.BIRTH_DATE,
                 STUDENT.ENROLLED_IN,
                 STUDENT.ENROLLED_SINCE,
                 STUDENT.PASSWORD,
-                STUDENT.COURSE_ASSISTANT)
+                STUDENT.IS_COURSE_ASSISTANT)
             .values(
-                student.getId(),
                 student.getName(),
                 student.getBirthDate(),
                 student.getEnrolledIn(),
                 student.getEnrolledSince(),
                 student.getPassword(),
-                student.getCourseAssistant())
+                student.getIsCourseAssistant())
             .returning(STUDENT.asterisk())
             .fetchOne();
 
     return recordToStudent(record);
   }
 
-  @Override
-  public Student remove(String id) {
-    if (id.length() != 8) {
-      throw new IllegalArgumentException("wrong input");
+  public Long getMaxStudentId() {
+    Long maxId = sql.select(max(STUDENT.STUDENT_ID)).from(STUDENT).fetchOne().component1();
+
+    if (maxId == null) {
+      throw new NoSuchElementException("no enrolled student");
     }
 
+    return maxId;
+  }
+
+  @Override
+  public Student remove(Long id) {
+
     var toRemove =
-        sql.deleteFrom(STUDENT).where(STUDENT.ID.eq(id)).returning(STUDENT.asterisk()).fetchOne();
+        sql.deleteFrom(STUDENT).where(STUDENT.STUDENT_ID.eq(id)).returning(STUDENT.asterisk()).fetchOne();
 
     return this.recordToStudent(toRemove);
   }

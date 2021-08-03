@@ -5,9 +5,13 @@ import java.util.Optional;
 import org.example.models.tables.pojos.Student;
 
 public interface StudentRepository {
-  Optional<Student> findById(String id);
+  Optional<Student> findStudentById(Long id);
+
+  Student studentLoginCheck(Long id, String hashedPassword);
 
   Student enroll(Student student) throws StudentAlreadyEnrolledException;
 
-  Student remove(String id);
+  Student remove(Long id);
+
+  Long getMaxStudentId();
 }

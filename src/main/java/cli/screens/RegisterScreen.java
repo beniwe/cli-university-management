@@ -6,17 +6,17 @@ import org.example.models.tables.pojos.Student;
 import student.command.EnrollStudentCommand;
 import student.storage.StudentRepository;
 
-public class EnrollStudentScreen implements Screen {
+public class RegisterScreen implements Screen {
   private final StudentRepository studentRepository;
 
-  public EnrollStudentScreen(StudentRepository studentRepository) {
+  public RegisterScreen(StudentRepository studentRepository) {
     this.studentRepository = studentRepository;
   }
 
   @Override
   public void show(Scanner in) {
     System.out.print("ID: ");
-    String id = in.nextLine();
+    String id2 = in.nextLine();
 
     System.out.print("Name: ");
     String name = in.nextLine();
@@ -42,8 +42,11 @@ public class EnrollStudentScreen implements Screen {
     LocalDate enrolledSince = LocalDate.now();
 
     Student studentToEnroll =
-        new Student(id, name, birthDate, courseId, enrolledSince, password, courseAssistant);
+        new Student(null , name, birthDate, courseId, enrolledSince, password, courseAssistant);
+
 
     new EnrollStudentCommand(studentRepository, studentToEnroll).execute();
+
+    System.out.println(studentRepository.getMaxStudentId());
   }
 }

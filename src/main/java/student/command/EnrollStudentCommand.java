@@ -17,11 +17,6 @@ public class EnrollStudentCommand implements Command {
 
   @Override
   public void execute() {
-    if (student.getId().length() != 8) {
-      // TODO: use a custom exception instead.
-      throw new IllegalArgumentException("Student ID must be 8 characters long.");
-    }
-
       String hashedPassword;
 
       try {
@@ -32,13 +27,13 @@ public class EnrollStudentCommand implements Command {
 
       Student hashedStudent =
         new Student(
-            student.getId(),
+            student.getStudentId(),
             student.getName(),
             student.getBirthDate(),
             student.getEnrolledIn(),
             student.getEnrolledSince(),
             hashedPassword,
-            student.getCourseAssistant());
+            student.getIsCourseAssistant());
 
     // TODO: catch and identify duplicate key exception and throw StudentAlreadyEnrolledException
     // instead.

@@ -13,9 +13,9 @@ public class RoleStudentTest {
   void duplicateKeyTest() throws SQLException {
     var postgreRepository = new PostgreSqlStudentRepository(PostgresConnectionFactory.build());
     var student1 =
-        new Student("12345678", "4324", LocalDate.now(), 1, LocalDate.now(), "123", true);
+        new Student(null, "Max", LocalDate.now(), 1, LocalDate.now(), "123", true);
     var student2 =
-        new Student("12345678", "4324", LocalDate.now(), 1, LocalDate.now(), "123", true);
+        new Student(null, "Max", LocalDate.now(), 1, LocalDate.now(), "123", true);
 
     postgreRepository.enroll(student1);
     postgreRepository.enroll(student2);

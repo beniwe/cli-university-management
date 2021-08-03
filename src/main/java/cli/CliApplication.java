@@ -1,24 +1,25 @@
 package cli;
 
-import cli.screens.EnrollStudentScreen;
+import cli.screens.RegisterScreen;
 import java.util.Scanner;
 import student.storage.StudentRepository;
 
 public class CliApplication implements Runnable {
   private final StudentRepository studentRepository;
-  private final EnrollStudentScreen enrollStudentScreen;
+  private final RegisterScreen registerScreen;
   // private final Session userSession;
 
   public CliApplication(StudentRepository studentRepository) {
     this.studentRepository = studentRepository;
-    this.enrollStudentScreen = new EnrollStudentScreen(studentRepository);
+    this.registerScreen = new RegisterScreen(studentRepository);
   }
 
   void printMenu() {
     System.out.println("Menu");
     System.out.println("---------------");
-    System.out.println("1) Enroll a Student");
-    System.out.println("2) Exit");
+    System.out.println("1) Login");
+    System.out.println("2) Register (student only)");
+    System.out.println("3) Exit");
   }
 
   void exit() {
@@ -28,14 +29,16 @@ public class CliApplication implements Runnable {
   @Override
   public void run() {
     try (Scanner in = new Scanner(System.in)) {
-      for (; ; ) {
+      for (;;) {
         printMenu();
         var choice = in.nextInt();
         in.nextLine();
         if (choice == 1) {
-          this.enrollStudentScreen.show(in);
+          this.registerScreen.show(in);
         } else if (choice == 2) {
           exit();
+        } else if (choice == 3) {
+
         } else {
           System.err.println("Invalid input.");
         }
