@@ -7,7 +7,6 @@ import student.storage.StudentRepository;
 public class CliApplication implements Runnable {
   private final StudentRepository studentRepository;
   private final RegisterScreen registerScreen;
-  // private final Session userSession;
 
   public CliApplication(StudentRepository studentRepository) {
     this.studentRepository = studentRepository;
@@ -16,10 +15,10 @@ public class CliApplication implements Runnable {
 
   void printMenu() {
     System.out.println("Menu");
-    System.out.println("---------------");
-    System.out.println("1) Login");
-    System.out.println("2) Register (student only)");
-    System.out.println("3) Exit");
+    System.out.println(sectionString(
+            "1) Login\n" +
+            "2) Register (students only)\n" +
+            "3) Exit"));
   }
 
   void exit() {
@@ -29,20 +28,54 @@ public class CliApplication implements Runnable {
   @Override
   public void run() {
     try (Scanner in = new Scanner(System.in)) {
-      for (;;) {
+      while (true) {
         printMenu();
         var choice = in.nextInt();
         in.nextLine();
         if (choice == 1) {
-          this.registerScreen.show(in);
-        } else if (choice == 2) {
-          exit();
-        } else if (choice == 3) {
 
+        } else if (choice == 2) {
+          this.registerScreen.show(in);
+
+        } else if (choice == 3) {
+          exit();
         } else {
           System.err.println("Invalid input.");
         }
       }
     }
+  }
+
+  public static String sectionString(String string) {
+    String result = "";
+    char[] chars = string.toCharArray();
+    int maxLength = 0;
+    int currLength = 0;
+
+    for (char currChar : chars) {
+
+      if (currLength > maxLength) {
+        maxLength = currLength;
+      }
+
+      if (currChar != '\n') {
+        currLength++;
+
+      } else {
+        currLength = 0;
+      }
+    }
+
+    for (int i = 0; i < maxLength; i++) {
+      result += "-";
+    }
+
+    result += "\n" + string + "\n";
+
+    for (int i = 0; i < maxLength; i++) {
+      result += "-";
+    }
+
+    return result;
   }
 }

@@ -17,15 +17,15 @@ public class EnrollStudentCommand implements Command {
 
   @Override
   public void execute() {
-      String hashedPassword;
+    String hashedPassword;
 
-      try {
-          hashedPassword = SHAHash(student.getPassword());
-      } catch (NoSuchAlgorithmException e) {
-          throw new IllegalStateException(e.getCause());
-      }
+    try {
+      hashedPassword = SHAHash(student.getPassword());
+    } catch (NoSuchAlgorithmException e) {
+      throw new IllegalStateException(e.getCause());
+    }
 
-      Student hashedStudent =
+    Student hashedStudent =
         new Student(
             student.getStudentId(),
             student.getName(),
@@ -42,18 +42,17 @@ public class EnrollStudentCommand implements Command {
 
   public static String SHAHash(String password) throws NoSuchAlgorithmException {
 
+    MessageDigest hashFunction = MessageDigest.getInstance("SHA");
 
-      MessageDigest hashFunction = MessageDigest.getInstance("SHA");
+    hashFunction.update(password.getBytes());
 
-      hashFunction.update(password.getBytes());
+    byte[] result = hashFunction.digest();
+    String hashedPassword = "";
 
-      byte[] result = hashFunction.digest();
-      String hashedPassword = "";
+    for (byte currByte : result) {
+      hashedPassword += String.format("%02x", currByte);
+    }
 
-      for (byte currByte : result) {
-        hashedPassword += String.format("%02x", currByte);
-      }
-
-      return hashedPassword;
+    return hashedPassword;
   }
 }

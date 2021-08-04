@@ -1,6 +1,6 @@
 package student.storage;
 
-import static org.example.models.Tables.STUDENT;
+import static org.example.models.Tables.*;
 import static org.jooq.impl.DSL.max;
 
 import java.util.NoSuchElementException;
@@ -53,7 +53,6 @@ public class PostgreSqlStudentRepository implements StudentRepository {
     }
 
     return student;
-
   }
 
   @Override
@@ -94,7 +93,10 @@ public class PostgreSqlStudentRepository implements StudentRepository {
   public Student remove(Long id) {
 
     var toRemove =
-        sql.deleteFrom(STUDENT).where(STUDENT.STUDENT_ID.eq(id)).returning(STUDENT.asterisk()).fetchOne();
+        sql.deleteFrom(STUDENT)
+            .where(STUDENT.STUDENT_ID.eq(id))
+            .returning(STUDENT.asterisk())
+            .fetchOne();
 
     return this.recordToStudent(toRemove);
   }

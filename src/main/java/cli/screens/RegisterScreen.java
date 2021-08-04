@@ -1,8 +1,13 @@
 package cli.screens;
 
+import cli.CliApplication;
+import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 import org.example.models.tables.pojos.Student;
+import query.GetTableQuery;
+import storage.PostgresConnectionFactory;
 import student.command.EnrollStudentCommand;
 import student.storage.StudentRepository;
 
@@ -15,8 +20,6 @@ public class RegisterScreen implements Screen {
 
   @Override
   public void show(Scanner in) {
-    System.out.print("ID: ");
-    String id2 = in.nextLine();
 
     System.out.print("Name: ");
     String name = in.nextLine();
@@ -24,29 +27,40 @@ public class RegisterScreen implements Screen {
     System.out.print("Password: ");
     String password = in.nextLine();
 
-    System.out.print("Date of birth: ");
-    LocalDate birthDate = LocalDate.parse(in.nextLine());
+    LocalDate birthDate;
 
-    System.out.print("Course ID: ");
-    int courseId = in.nextInt();
-    in.nextLine();
+    while (true) {
+      System.out.print("Date of birth: ");
+      try {
+        birthDate = LocalDate.parse(in.nextLine());
 
-    System.out.print("Course assistant (Y/N): ");
-    String answer = in.nextLine();
-    boolean courseAssistant;
+        break;
 
-    if (answer.equals("Y")) courseAssistant = true;
-    else if (answer.equals("N")) courseAssistant = false;
-    else throw new IllegalArgumentException("wrong input");
+      } catch (DateTimeParseException e) {
+        System.out.println(CliApplication.sectionString("wrong format\n<year>-<month>-<day>"));
+      }
+    }
+
+    String listOfDegreePrograms = "Degree Programs:\n";
+
+    try {
+      listOfDegreePrograms += GetTableQuery.degreeProgrammTable(PostgresConnectionFactory.build());
+    } catch (SQLException throwables) {
+      throw new IllegalStateException(throwables.getCause());
+    }
+
+    System.out.println(CliApplication.sectionString(listOfDegreePrograms));
+
+    System.out.print("Degree program: ");
+    int degreeProgram = in.nextInt();
 
     LocalDate enrolledSince = LocalDate.now();
 
     Student studentToEnroll =
-        new Student(null , name, birthDate, courseId, enrolledSince, password, courseAssistant);
-
+        new Student(null, name, birthDate, degreeProgram, enrolledSince, password, false);
 
     new EnrollStudentCommand(studentRepository, studentToEnroll).execute();
 
-    System.out.println(studentRepository.getMaxStudentId());
+    System.out.println("Your ID is: " + studentRepository.getMaxStudentId());
   }
 }

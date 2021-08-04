@@ -1,12 +1,11 @@
 package professor;
 
-import org.example.models.tables.pojos.Professor;
-
 import java.util.Optional;
+import org.example.models.tables.pojos.Professor;
 
 public interface ProfessorRepository {
 
-    Optional<org.example.models.tables.pojos.Professor> findProfessorById(Long id);
+  Optional<org.example.models.tables.pojos.Professor> findProfessorById(Long id);
 
-    Professor professorLoginCheck(Long id, String hashedPassword);
+  Professor professorLoginCheck(Long id, String hashedPassword);
 }
