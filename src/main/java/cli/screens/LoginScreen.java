@@ -1,34 +1,60 @@
 package cli.screens;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
-import org.example.models.tables.pojos.Student;
-import student.command.EnrollStudentCommand;
-import student.storage.StudentRepository;
+
+import cli.CliApplication;
+import authentication.LoginCheck;
+import authentication.User;
+import org.jooq.DSLContext;
 
 public class LoginScreen implements Screen {
-  private StudentRepository studentRepository;
+  private DSLContext sql;
 
-  public LoginScreen(StudentRepository studentRepository) {
-    this.studentRepository = studentRepository;
+  public LoginScreen(DSLContext sql) {
+    this.sql = sql;
   }
 
   @Override
   public void show(Scanner in) {
-    System.out.print("ID: ");
-    Long id = in.nextLong();
+    User user = null;
 
-    System.out.print("Password: ");
-    String password = in.nextLine();
+    while (true) {
+      System.out.print("ID: ");
+      Long id = in.nextLong();
 
-    String hashedPassword;
+      in.nextLine();
 
-    try {
-      hashedPassword = EnrollStudentCommand.SHAHash(password);
-    } catch (NoSuchAlgorithmException e) {
-      throw new IllegalStateException(e.getCause());
+      System.out.print("Password: ");
+      String password = in.nextLine();
+
+      LoginCheck authentication = new LoginCheck(sql, id, password);
+
+
+
+      try {
+        user = authentication.execute();
+
+        break;
+
+      } catch (IllegalArgumentException e) {
+        loginFailMessage();
+
+        int choice = in.nextInt();
+
+        if (choice == 1) {}
+
+        else if (choice == 2) {
+          return;
+        }
+      }
     }
+    Session session = new Session(user);
+  }
 
-    Student verification = studentRepository.studentLoginCheck(id, hashedPassword);
+  private void loginFailMessage() {
+    System.out.println("\n" + "Invalid ID and/or password");
+    System.out.println(CliApplication.sectionString(
+            "(1) Try again\n" +
+            "(2) Exit"));
   }
 }

@@ -3,7 +3,6 @@ package professor;
 import static org.example.models.Tables.PROFESSOR;
 
 import java.util.Optional;
-import org.example.models.tables.pojos.Professor;
 import org.example.models.tables.records.ProfessorRecord;
 import org.jooq.DSLContext;
 
@@ -32,22 +31,5 @@ public class PostgreSqlProfessorRepository implements ProfessorRepository {
     }
 
     return Optional.of(recordToProfessor(professor));
-  }
-
-  @Override
-  public Professor professorLoginCheck(Long id, String hashedPassword) {
-    var maybeProfessor = this.findProfessorById(id);
-
-    if (maybeProfessor.isEmpty()) {
-      throw new IllegalArgumentException("wrong ID");
-    }
-
-    var professor = maybeProfessor.get();
-
-    if (!professor.getPassword().equals(hashedPassword)) {
-      throw new IllegalArgumentException("wrong Password");
-    }
-
-    return professor;
   }
 }

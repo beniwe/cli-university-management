@@ -1,6 +1,6 @@
 package student.storage;
 
-import Exceptions.StudentAlreadyEnrolledException;
+import student.StudentAlreadyEnrolledException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +18,6 @@ public class InMemoryStudentRepository implements StudentRepository {
     return students.stream().filter(student -> student.getStudentId().equals(id)).findFirst();
   }
 
-  @Override
   public Student studentLoginCheck(Long id, String password) {
     var maybeStudent = findStudentById(id);
 
@@ -44,6 +43,8 @@ public class InMemoryStudentRepository implements StudentRepository {
     }
     this.students.add(student);
 
+    System.out.println("Your ID is: " + getMaxStudentId());
+
     return student;
   }
 
@@ -60,8 +61,8 @@ public class InMemoryStudentRepository implements StudentRepository {
     return null;
   }
 
-  @Override
-  public Long getMaxStudentId() {
+
+  private Long getMaxStudentId() {
     Long maxId = students.get(0).getStudentId();
 
     for (Student currStudent : students) {

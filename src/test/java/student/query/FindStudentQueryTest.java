@@ -1,6 +1,6 @@
 package student.query;
 
-import Exceptions.StudentAlreadyEnrolledException;
+import student.StudentAlreadyEnrolledException;
 import java.time.LocalDate;
 import org.example.models.tables.pojos.Student;
 import org.junit.jupiter.api.Assertions;

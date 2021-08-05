@@ -37,7 +37,7 @@ public class RegisterScreen implements Screen {
         break;
 
       } catch (DateTimeParseException e) {
-        System.out.println(CliApplication.sectionString("wrong format\n<year>-<month>-<day>"));
+        System.out.println("\n" + CliApplication.sectionString("wrong format...try again\n[year]-[month]-[day]"));
       }
     }
 
@@ -60,7 +60,5 @@ public class RegisterScreen implements Screen {
         new Student(null, name, birthDate, degreeProgram, enrolledSince, password, false);
 
     new EnrollStudentCommand(studentRepository, studentToEnroll).execute();
-
-    System.out.println("Your ID is: " + studentRepository.getMaxStudentId());
   }
 }

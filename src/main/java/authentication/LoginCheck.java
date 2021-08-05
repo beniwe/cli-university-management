@@ -1,0 +1,70 @@
+package authentication;
+
+import authentication.User;
+import org.example.models.tables.pojos.Professor;
+import org.example.models.tables.pojos.Student;
+import org.jooq.DSLContext;
+import professor.PostgreSqlProfessorRepository;
+import student.command.EnrollStudentCommand;
+import student.storage.PostgreSqlStudentRepository;
+
+public class LoginCheck{
+  private DSLContext sql;
+  private Long id;
+  private String hashedPassword;
+
+  public LoginCheck(DSLContext sql, Long id, String password) {
+    this.sql = sql;
+    this.id = id;
+    this.hashedPassword = EnrollStudentCommand.SHAHash(password);
+  }
+
+
+  public User execute() {
+    User currUser;
+
+    if (id < 10000000) {
+      currUser = new User(professorLoginCheck(id, hashedPassword));
+    }
+
+    else {
+      currUser = new User(studentLoginCheck(id, hashedPassword));
+    }
+
+    return currUser;
+  }
+
+  public Professor professorLoginCheck(Long id, String hashedPassword) {
+    var professorRepo = new PostgreSqlProfessorRepository(sql);
+    var maybeProfessor = professorRepo.findProfessorById(id);
+
+    if (maybeProfessor.isEmpty()) {
+      throw new IllegalArgumentException("wrong ID");
+    }
+
+    var professor = maybeProfessor.get();
+
+    if (!professor.getPassword().equals(hashedPassword)) {
+      throw new IllegalArgumentException("wrong Password");
+    }
+
+    return professor;
+  }
+
+  public Student studentLoginCheck(Long id, String hashedPassword) {
+    var studentRepo = new PostgreSqlStudentRepository(sql);
+    var maybeStudent = studentRepo.findStudentById(id);
+
+    if (maybeStudent.isEmpty()) {
+      throw new IllegalArgumentException("wrong ID");
+    }
+
+    var student = maybeStudent.get();
+
+    if (!student.getPassword().equals(hashedPassword)) {
+      throw new IllegalArgumentException("wrong Password");
+    }
+
+    return student;
+  }
+}

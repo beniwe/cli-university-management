@@ -19,11 +19,7 @@ public class EnrollStudentCommand implements Command {
   public void execute() {
     String hashedPassword;
 
-    try {
-      hashedPassword = SHAHash(student.getPassword());
-    } catch (NoSuchAlgorithmException e) {
-      throw new IllegalStateException(e.getCause());
-    }
+    hashedPassword = SHAHash(student.getPassword());
 
     Student hashedStudent =
         new Student(
@@ -40,9 +36,14 @@ public class EnrollStudentCommand implements Command {
     this.studentRepository.enroll(hashedStudent);
   }
 
-  public static String SHAHash(String password) throws NoSuchAlgorithmException {
+  public static String SHAHash(String password) {
 
-    MessageDigest hashFunction = MessageDigest.getInstance("SHA");
+    MessageDigest hashFunction;
+    try {
+      hashFunction = MessageDigest.getInstance("SHA");
+    } catch (NoSuchAlgorithmException e) {
+      throw new IllegalStateException(e.getCause());
+    }
 
     hashFunction.update(password.getBytes());
 

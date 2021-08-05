@@ -1,20 +1,24 @@
 package cli;
 
+import cli.screens.LoginScreen;
 import cli.screens.RegisterScreen;
 import java.util.Scanner;
+
+import org.jooq.DSLContext;
+import student.storage.PostgreSqlStudentRepository;
 import student.storage.StudentRepository;
 
 public class CliApplication implements Runnable {
-  private final StudentRepository studentRepository;
+  private final LoginScreen loginScreen;
   private final RegisterScreen registerScreen;
 
-  public CliApplication(StudentRepository studentRepository) {
-    this.studentRepository = studentRepository;
-    this.registerScreen = new RegisterScreen(studentRepository);
+  public CliApplication(DSLContext sql) {
+    this.registerScreen = new RegisterScreen(new PostgreSqlStudentRepository(sql));
+    this.loginScreen = new LoginScreen(sql);
   }
 
   void printMenu() {
-    System.out.println("Menu");
+    System.out.println("\nMenu");
     System.out.println(sectionString(
             "1) Login\n" +
             "2) Register (students only)\n" +
@@ -33,6 +37,7 @@ public class CliApplication implements Runnable {
         var choice = in.nextInt();
         in.nextLine();
         if (choice == 1) {
+          loginScreen.show(in);
 
         } else if (choice == 2) {
           this.registerScreen.show(in);
@@ -54,15 +59,14 @@ public class CliApplication implements Runnable {
 
     for (char currChar : chars) {
 
-      if (currLength > maxLength) {
-        maxLength = currLength;
+      if (currChar == '\n') {
+        currLength = 0;
       }
 
-      if (currChar != '\n') {
-        currLength++;
+      currLength++;
 
-      } else {
-        currLength = 0;
+      if (currLength > maxLength) {
+        maxLength = currLength;
       }
     }
 
@@ -76,6 +80,6 @@ public class CliApplication implements Runnable {
       result += "-";
     }
 
-    return result;
+    return result + "\n";
   }
 }

@@ -39,23 +39,6 @@ public class PostgreSqlStudentRepository implements StudentRepository {
   }
 
   @Override
-  public Student studentLoginCheck(Long id, String hashedPassword) {
-    var maybeStudent = this.findStudentById(id);
-
-    if (maybeStudent.isEmpty()) {
-      throw new IllegalArgumentException("wrong ID");
-    }
-
-    var student = maybeStudent.get();
-
-    if (!student.getPassword().equals(hashedPassword)) {
-      throw new IllegalArgumentException("wrong Password");
-    }
-
-    return student;
-  }
-
-  @Override
   public Student enroll(Student student) throws DataAccessException {
     var record =
         sql.insertInto(
@@ -76,10 +59,12 @@ public class PostgreSqlStudentRepository implements StudentRepository {
             .returning(STUDENT.asterisk())
             .fetchOne();
 
+    System.out.println("Your ID is: " + getMaxStudentId());
+
     return recordToStudent(record);
   }
 
-  public Long getMaxStudentId() {
+  private Long getMaxStudentId() {
     Long maxId = sql.select(max(STUDENT.STUDENT_ID)).from(STUDENT).fetchOne().component1();
 
     if (maxId == null) {
