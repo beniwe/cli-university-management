@@ -17,48 +17,43 @@ public class EnrollStudentCommand implements Command {
 
   @Override
   public void execute() {
-    if (student.getId().length() != 8) {
-      // TODO: use a custom exception instead.
-      throw new IllegalArgumentException("Student ID must be 8 characters long.");
-    }
+    String hashedPassword;
 
-      String hashedPassword;
+    hashedPassword = SHAHash(student.getPassword());
 
-      try {
-          hashedPassword = SHAHash(student.getPassword());
-      } catch (NoSuchAlgorithmException e) {
-          throw new IllegalStateException(e.getCause());
-      }
-
-      Student hashedStudent =
+    Student hashedStudent =
         new Student(
-            student.getId(),
+            student.getStudentId(),
             student.getName(),
             student.getBirthDate(),
             student.getEnrolledIn(),
             student.getEnrolledSince(),
             hashedPassword,
-            student.getCourseAssistant());
+            student.getIsCourseAssistant());
 
     // TODO: catch and identify duplicate key exception and throw StudentAlreadyEnrolledException
     // instead.
     this.studentRepository.enroll(hashedStudent);
   }
 
-  public static String SHAHash(String password) throws NoSuchAlgorithmException {
+  public static String SHAHash(String password) {
 
+    MessageDigest hashFunction;
+    try {
+      hashFunction = MessageDigest.getInstance("SHA");
+    } catch (NoSuchAlgorithmException e) {
+      throw new IllegalStateException(e.getCause());
+    }
 
-      MessageDigest hashFunction = MessageDigest.getInstance("SHA");
+    hashFunction.update(password.getBytes());
 
-      hashFunction.update(password.getBytes());
+    byte[] result = hashFunction.digest();
+    String hashedPassword = "";
 
-      byte[] result = hashFunction.digest();
-      String hashedPassword = "";
+    for (byte currByte : result) {
+      hashedPassword += String.format("%02x", currByte);
+    }
 
-      for (byte currByte : result) {
-        hashedPassword += String.format("%02x", currByte);
-      }
-
-      return hashedPassword;
+    return hashedPassword;
   }
 }

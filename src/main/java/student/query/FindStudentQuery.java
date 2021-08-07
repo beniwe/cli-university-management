@@ -7,15 +7,15 @@ import student.storage.StudentRepository;
 
 public class FindStudentQuery implements Query<Optional<Student>> {
   private final StudentRepository studentRepository;
-  private final String searchId;
+  private final Long searchId;
 
-  public FindStudentQuery(StudentRepository studentRepository, String searchId) {
+  public FindStudentQuery(StudentRepository studentRepository, Long searchId) {
     this.studentRepository = studentRepository;
     this.searchId = searchId;
   }
 
   @Override
   public Optional<Student> execute() {
-    return studentRepository.findById(searchId);
+    return studentRepository.findStudentById(searchId);
   }
 }

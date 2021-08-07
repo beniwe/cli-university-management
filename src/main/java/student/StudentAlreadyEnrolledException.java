@@ -1,4 +1,4 @@
-package Exceptions;
+package student;
 
 public class StudentAlreadyEnrolledException extends Error {
 

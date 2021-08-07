@@ -1,24 +1,28 @@
 package cli;
 
-import cli.screens.EnrollStudentScreen;
+import cli.screens.LoginScreen;
+import cli.screens.RegisterScreen;
 import java.util.Scanner;
+
+import org.jooq.DSLContext;
+import student.storage.PostgreSqlStudentRepository;
 import student.storage.StudentRepository;
 
 public class CliApplication implements Runnable {
-  private final StudentRepository studentRepository;
-  private final EnrollStudentScreen enrollStudentScreen;
-  // private final Session userSession;
+  private final LoginScreen loginScreen;
+  private final RegisterScreen registerScreen;
 
-  public CliApplication(StudentRepository studentRepository) {
-    this.studentRepository = studentRepository;
-    this.enrollStudentScreen = new EnrollStudentScreen(studentRepository);
+  public CliApplication(DSLContext sql) {
+    this.registerScreen = new RegisterScreen(new PostgreSqlStudentRepository(sql));
+    this.loginScreen = new LoginScreen(sql);
   }
 
   void printMenu() {
-    System.out.println("Menu");
-    System.out.println("---------------");
-    System.out.println("1) Enroll a Student");
-    System.out.println("2) Exit");
+    System.out.println("\nMenu");
+    System.out.println(sectionString(
+            "1) Login\n" +
+            "2) Register (students only)\n" +
+            "3) Exit"));
   }
 
   void exit() {
@@ -28,18 +32,54 @@ public class CliApplication implements Runnable {
   @Override
   public void run() {
     try (Scanner in = new Scanner(System.in)) {
-      for (; ; ) {
+      while (true) {
         printMenu();
         var choice = in.nextInt();
         in.nextLine();
         if (choice == 1) {
-          this.enrollStudentScreen.show(in);
+          loginScreen.show(in);
+
         } else if (choice == 2) {
+          this.registerScreen.show(in);
+
+        } else if (choice == 3) {
           exit();
         } else {
           System.err.println("Invalid input.");
         }
       }
     }
+  }
+
+  public static String sectionString(String string) {
+    String result = "";
+    char[] chars = string.toCharArray();
+    int maxLength = 0;
+    int currLength = 0;
+
+    for (char currChar : chars) {
+
+      if (currChar == '\n') {
+        currLength = 0;
+      }
+
+      currLength++;
+
+      if (currLength > maxLength) {
+        maxLength = currLength;
+      }
+    }
+
+    for (int i = 0; i < maxLength; i++) {
+      result += "-";
+    }
+
+    result += "\n" + string + "\n";
+
+    for (int i = 0; i < maxLength; i++) {
+      result += "-";
+    }
+
+    return result + "\n";
   }
 }
