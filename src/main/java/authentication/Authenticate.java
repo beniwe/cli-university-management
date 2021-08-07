@@ -1,6 +1,7 @@
 package authentication;
 
 import authentication.User;
+import cli.screens.Session;
 import org.example.models.tables.pojos.Professor;
 import org.example.models.tables.pojos.Student;
 import org.jooq.DSLContext;
@@ -8,30 +9,36 @@ import professor.PostgreSqlProfessorRepository;
 import student.command.EnrollStudentCommand;
 import student.storage.PostgreSqlStudentRepository;
 
-public class LoginCheck{
+public class Authenticate {
   private DSLContext sql;
   private Long id;
   private String hashedPassword;
 
-  public LoginCheck(DSLContext sql, Long id, String password) {
+  public Authenticate(DSLContext sql, Long id, String password) {
     this.sql = sql;
     this.id = id;
     this.hashedPassword = EnrollStudentCommand.SHAHash(password);
   }
 
 
-  public User execute() {
-    User currUser;
+  public Session execute() {
+    Professor professor;
+    Student student;
+    Session session;
 
     if (id < 10000000) {
-      currUser = new User(professorLoginCheck(id, hashedPassword));
+      professor = new Professor(professorLoginCheck(id, hashedPassword));
+
+      session = new Session(professor);
     }
 
     else {
-      currUser = new User(studentLoginCheck(id, hashedPassword));
+      student = new Student(studentLoginCheck(id, hashedPassword));
+
+      session = new Session(student);
     }
 
-    return currUser;
+    return session;
   }
 
   public Professor professorLoginCheck(Long id, String hashedPassword) {

@@ -1,8 +1,6 @@
 package authentication;
 
-import authentication.LoginCheck;
 import org.jooq.DSLContext;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import storage.PostgresConnectionFactory;
 
@@ -10,7 +8,7 @@ import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class LoginCheckTest {
+class AuthenticateTest {
 
     @Test
     void authenticationTest() throws SQLException {
@@ -24,8 +22,8 @@ class LoginCheckTest {
 
 
 
-        LoginCheck successfulLoginCheck = new LoginCheck(sql, existingId, existingPassword);
-        LoginCheck failingLoginCheck = new LoginCheck(sql, nonExistingId, nonExistingPassword);
+        Authenticate successfulLoginCheck = new Authenticate(sql, existingId, existingPassword);
+        Authenticate failingLoginCheck = new Authenticate(sql, nonExistingId, nonExistingPassword);
 
         try {
             successfulLoginCheck.execute();

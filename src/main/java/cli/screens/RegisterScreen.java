@@ -4,6 +4,7 @@ import cli.CliApplication;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 import java.util.Scanner;
 import org.example.models.tables.pojos.Student;
 import query.GetTableQuery;
@@ -41,15 +42,7 @@ public class RegisterScreen implements Screen {
       }
     }
 
-    String listOfDegreePrograms = "Degree Programs:\n";
-
-    try {
-      listOfDegreePrograms += GetTableQuery.degreeProgrammTable(PostgresConnectionFactory.build());
-    } catch (SQLException throwables) {
-      throw new IllegalStateException(throwables.getCause());
-    }
-
-    System.out.println(CliApplication.sectionString(listOfDegreePrograms));
+    printDegreePrograms();
 
     System.out.print("Degree program: ");
     int degreeProgram = in.nextInt();
@@ -60,5 +53,26 @@ public class RegisterScreen implements Screen {
         new Student(null, name, birthDate, degreeProgram, enrolledSince, password, false);
 
     new EnrollStudentCommand(studentRepository, studentToEnroll).execute();
+  }
+
+  public void printDegreePrograms() {
+    List<String> degreeProgramList;
+    String degreePrograms = "";
+
+    try {
+      degreeProgramList = GetTableQuery.degreeProgramTable(PostgresConnectionFactory.build());
+    } catch (SQLException throwables) {
+      throw new IllegalStateException(throwables.getCause());
+    }
+
+    for (String currString : degreeProgramList) {
+      degreePrograms += currString + "\n";
+    }
+
+    StringBuilder sb = new StringBuilder(degreePrograms);
+
+    sb.deleteCharAt(degreePrograms.length()-1);
+
+    System.out.println("Degree Programs:\n" + CliApplication.sectionString(sb.toString()));
   }
 }

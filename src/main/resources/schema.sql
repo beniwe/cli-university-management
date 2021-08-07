@@ -66,5 +66,10 @@ insert into course(name) values('Grundlagen der Organisation');
 insert into course(name) values('Rechnungswesen');
 insert into course(name) values('Technische Grundlagen der Informatik');
 
+insert into professor(name, birth_date, password, is_admin)
+values('Bernhard Gittenberger', '1800-01-01', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', true);
+
 insert into student(name, birth_date, enrolled_in, enrolled_since, password, is_course_assistant)
-values('Benjamin Weber', '2002-02-27', 1, '2021-01-01', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', false);
+values('Benjamin Weber', '2002-02-27', 1, '2021-01-01', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', true);
+
+

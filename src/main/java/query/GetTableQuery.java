@@ -6,39 +6,35 @@ import org.example.models.tables.records.CourseRecord;
 import org.example.models.tables.records.DegreeProgramRecord;
 import org.jooq.DSLContext;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GetTableQuery {
   private GetTableQuery() {}
-  ;
 
-  public static String degreeProgrammTable(DSLContext sql) {
-    String result = "";
+  public static List<String> degreeProgramTable(DSLContext sql) {
 
-    var degreePrograms = sql.fetch(DEGREE_PROGRAM);
+    List<String> programs = new ArrayList<>();
 
-    for (DegreeProgramRecord currProgram : degreePrograms) {
-      result += "(" + currProgram.getProgramId() + ") " + currProgram.getName() + "\n";
+    var degreeProgramRecords = sql.fetch(DEGREE_PROGRAM);
+
+    for (DegreeProgramRecord currProgram : degreeProgramRecords) {
+      programs.add("(" + currProgram.getProgramId() + ") " + currProgram.getName());
     }
 
-    StringBuilder sb = new StringBuilder(result);
-
-    sb.deleteCharAt(result.length() - 1);
-
-    return sb.toString();
+    return programs;
   }
 
-  public static String courseTable(DSLContext sql) {
-    String result = "";
+  public static List<String> courseTable(DSLContext sql) {
 
-    var courses = sql.fetch(COURSE);
+    List<String> courses = new ArrayList<>();
 
-    for (CourseRecord currCourse : courses) {
-      result += "(" + currCourse.getCourseId() + ") " + currCourse.getName() + "\n";
+    var courseRecords = sql.fetch(COURSE);
+
+    for (CourseRecord currCourse : courseRecords) {
+      courses.add("(" + currCourse.getCourseId() + ")" + currCourse.getName());
     }
 
-    StringBuilder sb = new StringBuilder(result);
-
-    sb.deleteCharAt(result.length() - 1);
-
-    return sb.toString();
+    return courses;
   }
 }
