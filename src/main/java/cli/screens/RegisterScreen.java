@@ -38,7 +38,8 @@ public class RegisterScreen implements Screen {
         break;
 
       } catch (DateTimeParseException e) {
-        System.out.println("\n" + CliApplication.sectionString("wrong format...try again\n[year]-[month]-[day]"));
+        System.out.println(
+            "\n" + CliApplication.sectionString("wrong format...try again\n[year]-[month]-[day]"));
       }
     }
 
@@ -59,11 +60,7 @@ public class RegisterScreen implements Screen {
     List<String> degreeProgramList;
     String degreePrograms = "";
 
-    try {
-      degreeProgramList = GetTableQuery.degreeProgramTable(PostgresConnectionFactory.build());
-    } catch (SQLException throwables) {
-      throw new IllegalStateException(throwables.getCause());
-    }
+    degreeProgramList = GetTableQuery.degreeProgramTable(PostgresConnectionFactory.build());
 
     for (String currString : degreeProgramList) {
       degreePrograms += currString + "\n";
@@ -71,7 +68,7 @@ public class RegisterScreen implements Screen {
 
     StringBuilder sb = new StringBuilder(degreePrograms);
 
-    sb.deleteCharAt(degreePrograms.length()-1);
+    sb.deleteCharAt(degreePrograms.length() - 1);
 
     System.out.println("Degree Programs:\n" + CliApplication.sectionString(sb.toString()));
   }

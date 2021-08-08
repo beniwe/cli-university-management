@@ -1,10 +1,10 @@
 package student.query;
 
-import student.StudentAlreadyEnrolledException;
 import java.time.LocalDate;
 import org.example.models.tables.pojos.Student;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import student.StudentAlreadyEnrolledException;
 import student.storage.InMemoryStudentRepository;
 
 class FindStudentQueryTest {

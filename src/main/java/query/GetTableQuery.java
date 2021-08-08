@@ -2,12 +2,11 @@ package query;
 
 import static org.example.models.Tables.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.example.models.tables.records.CourseRecord;
 import org.example.models.tables.records.DegreeProgramRecord;
 import org.jooq.DSLContext;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class GetTableQuery {
   private GetTableQuery() {}

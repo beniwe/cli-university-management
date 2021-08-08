@@ -3,10 +3,8 @@ package cli;
 import cli.screens.LoginScreen;
 import cli.screens.RegisterScreen;
 import java.util.Scanner;
-
 import org.jooq.DSLContext;
 import student.storage.PostgreSqlStudentRepository;
-import student.storage.StudentRepository;
 
 public class CliApplication implements Runnable {
   private final LoginScreen loginScreen;
@@ -19,10 +17,7 @@ public class CliApplication implements Runnable {
 
   void printMenu() {
     System.out.println("\nMenu");
-    System.out.println(sectionString(
-            "1) Login\n" +
-            "2) Register (students only)\n" +
-            "3) Exit"));
+    System.out.println(sectionString("1) Login\n" + "2) Register (students only)\n" + "3) Exit"));
   }
 
   void exit() {
@@ -63,11 +58,11 @@ public class CliApplication implements Runnable {
         currLength = 0;
       }
 
-      currLength++;
-
       if (currLength > maxLength) {
         maxLength = currLength;
       }
+
+      currLength++;
     }
 
     for (int i = 0; i < maxLength; i++) {

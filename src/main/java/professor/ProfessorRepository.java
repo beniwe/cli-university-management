@@ -1,7 +1,6 @@
 package professor;
 
 import java.util.Optional;
-import org.example.models.tables.pojos.Professor;
 
 public interface ProfessorRepository {
 

@@ -5,6 +5,8 @@ import static org.jooq.impl.DSL.max;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
+
+import command.RecordToTableElement;
 import org.example.models.tables.pojos.Student;
 import org.example.models.tables.records.StudentRecord;
 import org.jooq.DSLContext;
@@ -17,17 +19,6 @@ public class PostgreSqlStudentRepository implements StudentRepository {
     this.sql = sql;
   }
 
-  private static Student recordToStudent(StudentRecord record) {
-    return new Student(
-        record.getStudentId(),
-        record.getName(),
-        record.getBirthDate(),
-        record.getEnrolledIn(),
-        record.getEnrolledSince(),
-        record.getPassword(),
-        record.getIsCourseAssistant());
-  }
-
   @Override
   public Optional<Student> findStudentById(Long id) {
     var student = sql.fetchOne(STUDENT, STUDENT.STUDENT_ID.eq(id));
@@ -35,7 +26,7 @@ public class PostgreSqlStudentRepository implements StudentRepository {
       return Optional.empty();
     }
 
-    return Optional.of(recordToStudent(student));
+    return Optional.of(RecordToTableElement.recordToStudent(student));
   }
 
   @Override
@@ -61,7 +52,7 @@ public class PostgreSqlStudentRepository implements StudentRepository {
 
     System.out.println("Your ID is: " + getMaxStudentId());
 
-    return recordToStudent(record);
+    return RecordToTableElement.recordToStudent(record);
   }
 
   private Long getMaxStudentId() {
@@ -83,6 +74,6 @@ public class PostgreSqlStudentRepository implements StudentRepository {
             .returning(STUDENT.asterisk())
             .fetchOne();
 
-    return this.recordToStudent(toRemove);
+    return RecordToTableElement.recordToStudent(toRemove);
   }
 }

@@ -2,7 +2,6 @@ package cli;
 
 import java.sql.SQLException;
 import storage.PostgresConnectionFactory;
-import student.storage.PostgreSqlStudentRepository;
 
 public class Main {
   public static void main(String[] args) throws SQLException {

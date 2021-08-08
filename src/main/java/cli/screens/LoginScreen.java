@@ -1,9 +1,8 @@
 package cli.screens;
 
-import java.util.Scanner;
-
-import cli.CliApplication;
 import authentication.Authenticate;
+import cli.CliApplication;
+import java.util.Scanner;
 import org.jooq.DSLContext;
 
 public class LoginScreen implements Screen {
@@ -28,21 +27,18 @@ public class LoginScreen implements Screen {
 
       Authenticate authentication = new Authenticate(sql, id, password);
 
-
-
       try {
-         session = authentication.execute();
+        session = authentication.execute();
 
-         break;
+        break;
 
       } catch (IllegalArgumentException e) {
         printFailedLoginMessage();
 
         int choice = in.nextInt();
 
-        if (choice == 1) {}
-
-        else if (choice == 2) {
+        if (choice == 1) {
+        } else if (choice == 2) {
           return;
         }
       }
@@ -52,8 +48,6 @@ public class LoginScreen implements Screen {
 
   private void printFailedLoginMessage() {
     System.out.println("\n" + "Invalid ID and/or password");
-    System.out.println(CliApplication.sectionString(
-            "(1) Try again\n" +
-            "(2) Exit"));
+    System.out.println(CliApplication.sectionString("(1) Try again\n" + "(2) Exit"));
   }
 }
