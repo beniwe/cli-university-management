@@ -2,13 +2,15 @@ package cli.screens;
 
 import cli.CliApplication;
 
-import java.sql.SQLException;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
+import org.example.models.tables.pojos.Course;
 import org.example.models.tables.pojos.DegreeProgram;
 import org.example.models.tables.pojos.Professor;
 import org.example.models.tables.pojos.Student;
 import storage.PostgresConnectionFactory;
+import student.query.FindCoursesQuery;
 import student.query.FindDegreeProgramQuery;
 
 public class Session implements Screen {
@@ -35,28 +37,143 @@ public class Session implements Screen {
   public void professorSession(Scanner in) {
     System.out.println("Hello " + professor.getName());
 
-    printProfessorMenu();
+    while(true) {
+      printProfessorMenu();
 
-    int choice = in.nextInt();
+      String choice = in.nextLine();
 
-    if (choice == 1) {
-      printAccountDetails();
+      if (choice.equals("1")) {
+        printAccountDetails();
+      }
+
+      if (choice.equals("2")) {
+
+      }
+
+      if (professor.getIsAdmin() == true) {
+        if (choice.equals("3")) {
+
+        }
+
+        else if (choice.equals("4")) {
+
+        }
+
+        else if (choice.equals("5")) {
+
+        }
+
+        else if (choice.equals("6")) {
+
+        }
+
+        else if (choice.equals("7")) {
+
+        }
+
+        if (choice.equals("8")) {
+          return;
+        }
+
+        else {
+          if (!(choice.equals("1") || choice.equals("2"))) {
+            System.out.println("invalid input");
+          }
+        }
+      }
+
+      else {
+        if (choice.equals("3")) {
+
+        }
+
+        else if (choice.equals("4")) {
+
+        }
+
+        else if (choice.equals("5")) {
+
+        }
+
+        else if (choice.equals("6")) {
+          return;
+        }
+
+        else {
+          if (!(choice.equals("1") || choice.equals("2"))) {
+            System.out.println("invalid input");
+          }
+        }
+      }
+
+      in.nextLine();
     }
-
-    in.nextLine();
   }
 
   public void studentSession(Scanner in) {
     System.out.println("Hello " + student.getName());
 
-    printStudentMenu();
+    while(true) {
+      printStudentMenu();
 
-    int choice = in.nextInt();
+      String choice = in.nextLine();
 
-    if (choice == 1) {
-      printAccountDetails();
+      if (choice.equals("1")) {
+        printAccountDetails();
+      }
+
+      else if (choice.equals("2")) {
+        try {
+          printCurrentCourses();
+        } catch (NoSuchElementException e) {
+          System.out.println(e.getMessage());
+        }
+      }
+
+      if (student.getIsCourseAssistant() == true) {
+        if (choice.equals("3")){
+
+        }
+
+        else if (choice.equals("4")) {
+
+        }
+
+        else if (choice.equals("5")) {
+
+        }
+
+        else if (choice.equals("6")) {
+          return;
+        }
+
+        else {
+          if (!(choice.equals("1") || choice.equals("2"))) {
+            System.out.println("invalid input");
+          }
+        }
+      }
+
+      else {
+        if (choice.equals("3")) {
+
+        }
+
+        else if (choice.equals("4")) {
+
+        }
+
+        else if (choice.equals("5")) {
+          return;
+        }
+
+        else {
+          if (!(choice.equals("1") || choice.equals("2"))) {
+            System.out.println("invalid input");
+          }
+        }
+      }
     }
-
   }
 
   public void printProfessorMenu() {
@@ -65,20 +182,22 @@ public class Session implements Screen {
     if (professor.getIsAdmin() == true) {
       menu +=
           "(1) Account Details\n"
-              +
               // display courses, assign CA, grade and remove students
-              "(2) Course Management\n"
+              + "(2) Course Management\n"
               + "(3) Register Professor\n"
               + "(4) Assign Admin\n"
-              + "(5) Occupy a Course\n"
-              + "(6) Delete Account";
+              + "(5) Assign Course Assistant\n"
+              + "(6) Occupy a Course\n"
+              + "(7) Delete Account\n"
+              + "(8) Exit";
     } else {
       menu +=
           "(1) Account Details\n"
               + "(2) Course Management\n"
               + "(3) Assign Course Assistant\n"
               + "(4) Occupy a Course\n"
-              + "(5) Delete Account";
+              + "(5) Delete Account\n"
+              + "(6) Exit";
     }
 
     System.out.println("\nMenu:\n" + CliApplication.sectionString(menu));
@@ -93,13 +212,15 @@ public class Session implements Screen {
               + "(2) Display current Courses\n"
               + "(3) Grade Student\n"
               + "(4) Enroll in a Course\n"
-              + "(5) Exmatriculate";
+              + "(5) Exmatriculate\n"
+              + "(6) Exit";
     } else {
       menu +=
           "(1) Account Details\n"
               + "(2) Display current Courses\n"
               + "(3) Enroll in a Course\n"
-              + "(4) Exmatriculate";
+              + "(4) Exmatriculate\n"
+              + "(5) Exit";
     }
 
     System.out.println("\nMenu:\n" + CliApplication.sectionString(menu));
@@ -132,5 +253,22 @@ public class Session implements Screen {
     }
 
     System.out.println("\nAccount Details:\n" + CliApplication.sectionString(accountDetails));
+  }
+
+  public void printCurrentCourses() {
+    String courses = "";
+
+    var courseQuery = new FindCoursesQuery(PostgresConnectionFactory.build(), student.getStudentId());
+    var courseList = courseQuery.execute();
+
+    for (Course currCourse : courseList) {
+      courses += currCourse.getName() + " | ECTS(" + currCourse.getEcts() + ")\n";
+    }
+
+    StringBuilder sb = new StringBuilder(courses);
+
+    sb.deleteCharAt(courses.length() - 1);
+
+    System.out.println("\nCourses:\n" + CliApplication.sectionString(sb.toString()));
   }
 }

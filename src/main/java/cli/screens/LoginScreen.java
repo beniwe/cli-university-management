@@ -2,6 +2,8 @@ package cli.screens;
 
 import authentication.Authenticate;
 import cli.CliApplication;
+
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import org.jooq.DSLContext;
 
@@ -17,8 +19,22 @@ public class LoginScreen implements Screen {
     Session session;
 
     while (true) {
-      System.out.print("ID: ");
-      Long id = in.nextLong();
+
+      Long id;
+
+      while (true) {
+        System.out.print("ID: ");
+        try {
+          id = in.nextLong();
+
+
+          break;
+        } catch (InputMismatchException e) {
+          System.out.println("\nInput needs to be an integer\n");
+
+          in.nextLine();
+        }
+      }
 
       in.nextLine();
 

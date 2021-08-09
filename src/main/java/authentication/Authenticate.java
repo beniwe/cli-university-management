@@ -4,7 +4,7 @@ import cli.screens.Session;
 import org.example.models.tables.pojos.Professor;
 import org.example.models.tables.pojos.Student;
 import org.jooq.DSLContext;
-import professor.PostgreSqlProfessorRepository;
+import professor.storage.PostgreSqlProfessorRepository;
 import student.command.EnrollStudentCommand;
 import student.storage.PostgreSqlStudentRepository;
 

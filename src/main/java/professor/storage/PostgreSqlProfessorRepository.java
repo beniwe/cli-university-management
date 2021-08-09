@@ -1,11 +1,11 @@
-package professor;
+package professor.storage;
 
 import static org.example.models.Tables.PROFESSOR;
 
 import java.util.Optional;
 
+import org.example.models.tables.pojos.Professor;
 import command.RecordToTableElement;
-import org.example.models.tables.records.ProfessorRecord;
 import org.jooq.DSLContext;
 
 public class PostgreSqlProfessorRepository implements ProfessorRepository {
@@ -18,7 +18,7 @@ public class PostgreSqlProfessorRepository implements ProfessorRepository {
 
 
   @Override
-  public Optional<org.example.models.tables.pojos.Professor> findProfessorById(Long id) {
+  public Optional<Professor> findProfessorById(Long id) {
     var professor = sql.fetchOne(PROFESSOR, PROFESSOR.PROFESSOR_ID.eq(id));
     if (professor == null) {
       return Optional.empty();

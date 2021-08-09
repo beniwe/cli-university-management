@@ -42,6 +42,7 @@ public class RecordToTableElement {
         return new Course(
                 record.getCourseId(),
                 record.getName(),
+                record.getEcts(),
                 record.getAssignedProfessor());
     }
 }

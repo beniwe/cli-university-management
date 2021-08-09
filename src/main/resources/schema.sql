@@ -39,6 +39,7 @@ alter sequence student_student_id_seq restart with 10000000;
 create table course (
     course_id serial primary key,
     name varchar(128) not null unique,
+    ects decimal(3,1) not null,
     assigned_professor bigint references professor(professor_id)
 );
 
@@ -58,18 +59,33 @@ insert into degree_program(name) values('Medizinische Informatik');
 insert into degree_program(name) values('Maschinenbau');
 insert into degree_program(name) values('Elektrotechnik');
 
-insert into course(name) values('Algebra und diskrete Mathematik');
-insert into course(name) values('Einführung in die Programmierung');
-insert into course(name) values('Denkweisen der Informatik');
-insert into course(name) values('Analysis');
-insert into course(name) values('Grundlagen der Organisation');
-insert into course(name) values('Rechnungswesen');
-insert into course(name) values('Technische Grundlagen der Informatik');
+insert into course(name, ects) values('Algebra und diskrete Mathematik', 8.0);
+insert into course(name, ects) values('Einführung in die Programmierung', 5.5);
+insert into course(name, ects) values('Denkweisen der Informatik', 3.0);
+insert into course(name, ects) values('Analysis', 6.5);
+insert into course(name, ects) values('Grundlagen der Organisation', 3.0);
+insert into course(name, ects) values('Rechnungswesen', 2.0);
+insert into course(name, ects) values('Technische Grundlagen der Informatik', 5.5);
 
 insert into professor(name, birth_date, password, is_admin)
 values('Bernhard Gittenberger', '1800-01-01', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', true);
 
 insert into student(name, birth_date, enrolled_in, enrolled_since, password, is_course_assistant)
 values('Benjamin Weber', '2002-02-27', 1, '2021-01-01', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', true);
+
+insert into student_course(fk_student_id, fk_course_id)
+values(10000000, 1);
+
+insert into student_course(fk_student_id, fk_course_id)
+values(10000000, 2);
+
+insert into student_course(fk_student_id, fk_course_id)
+values(10000000, 3);
+
+insert into student_course(fk_student_id, fk_course_id)
+values(10000000, 5);
+
+insert into student_course(fk_student_id, fk_course_id)
+values(10000000, 6);
 
 

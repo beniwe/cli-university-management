@@ -29,15 +29,15 @@ public class CliApplication implements Runnable {
     try (Scanner in = new Scanner(System.in)) {
       while (true) {
         printMenu();
-        var choice = in.nextInt();
-        in.nextLine();
-        if (choice == 1) {
+        var choice = in.nextLine();
+
+        if (choice.equals("1")) {
           loginScreen.show(in);
 
-        } else if (choice == 2) {
+        } else if (choice.equals("2")) {
           this.registerScreen.show(in);
 
-        } else if (choice == 3) {
+        } else if (choice.equals("3")) {
           exit();
         } else {
           System.err.println("Invalid input.");
