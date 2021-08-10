@@ -10,6 +10,7 @@ import org.example.models.tables.pojos.DegreeProgram;
 import org.example.models.tables.pojos.Professor;
 import org.example.models.tables.pojos.Student;
 import storage.PostgresConnectionFactory;
+import student.NoGradeException;
 import student.query.FindCoursesQuery;
 import student.query.FindDegreeProgramQuery;
 
@@ -247,7 +248,7 @@ public class Session implements Screen {
               "ID: " + student.getStudentId() + "\n"
                       + "Name: " + student.getName() + "\n"
                       + "Birth Date: " + student.getBirthDate() + "\n"
-                      + "Enrolled in:" + degreeProgrammName + "\n"
+                      + "Enrolled in: " + degreeProgrammName + "\n"
                       + "Enrolled since: " + student.getEnrolledSince() + "\n"
                       + "Course Assistant: " + student.getIsCourseAssistant();
     }
@@ -262,7 +263,15 @@ public class Session implements Screen {
     var courseList = courseQuery.execute();
 
     for (Course currCourse : courseList) {
-      courses += currCourse.getName() + " | ECTS(" + currCourse.getEcts() + ")\n";
+
+      try {
+        int currGrade = courseQuery.getGrade(currCourse.getCourseId());
+
+        courses += currCourse.getName() + " | ECTS(" + currCourse.getEcts() + ")" + " | Grade(" + currGrade + ")\n";
+      } catch(NoGradeException e) {
+
+          courses += currCourse.getName() + " | ECTS(" + currCourse.getEcts() + ")\n";
+      }
     }
 
     StringBuilder sb = new StringBuilder(courses);
