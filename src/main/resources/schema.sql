@@ -46,6 +46,7 @@ create table course (
 create table student_course (
     fk_student_id bigint references student(student_id),
     fk_course_id int references course(course_id),
+    is_course_assistant boolean not null,
     grade int check (grade >= 1 and grade <= 5),
     constraint student_course_pkey primary key (fk_student_id, fk_course_id)
 );
@@ -73,19 +74,19 @@ values('Bernhard Gittenberger', '1800-01-01', '40bd001563085fc35165329ea1ff5c5ec
 insert into student(name, birth_date, enrolled_in, enrolled_since, password, is_course_assistant)
 values('Benjamin Weber', '2002-02-27', 1, '2021-01-01', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', true);
 
-insert into student_course(fk_student_id, fk_course_id, grade)
-values(10000000, 1, 3);
+insert into student_course(fk_student_id, fk_course_id, is_course_assistant, grade)
+values(10000000, 1, true, 3);
 
-insert into student_course(fk_student_id, fk_course_id)
-values(10000000, 2);
+insert into student_course(fk_student_id, fk_course_id, is_course_assistant)
+values(10000000,  2, false);
 
-insert into student_course(fk_student_id, fk_course_id, grade)
-values(10000000, 3, 2);
+insert into student_course(fk_student_id, fk_course_id, is_course_assistant, grade)
+values(10000000, 3, false, 2);
 
-insert into student_course(fk_student_id, fk_course_id, grade)
-values(10000000, 5, 1);
+insert into student_course(fk_student_id, fk_course_id, is_course_assistant, grade)
+values(10000000, 5, false, 1);
 
-insert into student_course(fk_student_id, fk_course_id)
-values(10000000, 6);
+insert into student_course(fk_student_id, fk_course_id, is_course_assistant)
+values(10000000, 6, true);
 
 

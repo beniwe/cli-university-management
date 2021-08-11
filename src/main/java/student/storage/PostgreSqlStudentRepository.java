@@ -31,6 +31,8 @@ public class PostgreSqlStudentRepository implements StudentRepository {
 
   @Override
   public Student enroll(Student student) throws DataAccessException {
+
+
     var record =
         sql.insertInto(
                 STUDENT,

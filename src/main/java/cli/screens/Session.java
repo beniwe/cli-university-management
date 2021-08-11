@@ -47,67 +47,41 @@ public class Session implements Screen {
         printAccountDetails();
       }
 
-      if (choice.equals("2")) {
+      else if (choice.equals("2")) {
 
       }
 
-      if (professor.getIsAdmin() == true) {
-        if (choice.equals("3")) {
+      else if (choice.equals("3")){
 
-        }
+      }
 
-        else if (choice.equals("4")) {
+      else if (choice.equals("4")) {
 
-        }
+      }
 
-        else if (choice.equals("5")) {
+      else if (choice.equals("5")) {
 
-        }
+      }
 
-        else if (choice.equals("6")) {
+      else if (choice.equals("6")) {
+        return;
+      }
 
-        }
+      else if (professor.getIsAdmin() && choice.equals("7")) {
 
-        else if (choice.equals("7")) {
+      }
 
-        }
+      else if (professor.getIsAdmin() && choice.equals("8")) {
 
-        if (choice.equals("8")) {
-          return;
-        }
+      }
 
-        else {
-          if (!(choice.equals("1") || choice.equals("2"))) {
-            System.out.println("invalid input");
-          }
-        }
+      else if (professor.getIsAdmin() && choice.equals("9")) {
+
       }
 
       else {
-        if (choice.equals("3")) {
-
-        }
-
-        else if (choice.equals("4")) {
-
-        }
-
-        else if (choice.equals("5")) {
-
-        }
-
-        else if (choice.equals("6")) {
-          return;
-        }
-
-        else {
-          if (!(choice.equals("1") || choice.equals("2"))) {
-            System.out.println("invalid input");
-          }
-        }
+        System.out.println("invalid input");
       }
-
-      in.nextLine();
     }
   }
 
@@ -131,48 +105,28 @@ public class Session implements Screen {
         }
       }
 
-      if (student.getIsCourseAssistant() == true) {
-        if (choice.equals("3")){
+      else if (choice.equals("3")){
 
-        }
+      }
 
-        else if (choice.equals("4")) {
+      else if (choice.equals("4")) {
 
-        }
+      }
 
-        else if (choice.equals("5")) {
+      else if (choice.equals("5")) {
+        return;
+      }
 
-        }
+      else if (student.getIsCourseAssistant() && choice.equals("6")) {
 
-        else if (choice.equals("6")) {
-          return;
-        }
+      }
 
-        else {
-          if (!(choice.equals("1") || choice.equals("2"))) {
-            System.out.println("invalid input");
-          }
-        }
+      else if (student.getIsCourseAssistant() && choice.equals("7")) {
+
       }
 
       else {
-        if (choice.equals("3")) {
-
-        }
-
-        else if (choice.equals("4")) {
-
-        }
-
-        else if (choice.equals("5")) {
-          return;
-        }
-
-        else {
-          if (!(choice.equals("1") || choice.equals("2"))) {
-            System.out.println("invalid input");
-          }
-        }
+        System.out.println("invalid input");
       }
     }
   }
@@ -185,12 +139,18 @@ public class Session implements Screen {
           "(1) Account Details\n"
               // display courses, assign CA, grade and remove students
               + "(2) Course Management\n"
-              + "(3) Register Professor\n"
-              + "(4) Assign Admin\n"
-              + "(5) Assign Course Assistant\n"
-              + "(6) Occupy a Course\n"
-              + "(7) Delete Account\n"
-              + "(8) Exit";
+              + "(3) Assign Course Assistant\n"
+              + "(4) Occupy a Course\n"
+              + "(5) Delete Account\n"
+              + "(6) Exit\n\n"
+
+              + "Admin Options:\n"
+              + "(7) Register Professor\n"
+              + "(8) Assign Admin\n"
+              + "(9) Remove Professor";
+
+
+
     } else {
       menu +=
           "(1) Account Details\n"
@@ -211,10 +171,13 @@ public class Session implements Screen {
       menu +=
           "(1) Account Details\n"
               + "(2) Display current Courses\n"
-              + "(3) Grade Student\n"
-              + "(4) Enroll in a Course\n"
-              + "(5) Exmatriculate\n"
-              + "(6) Exit";
+              + "(3) Enroll in a Course\n"
+              + "(4) Exmatriculate\n"
+              + "(5) Exit\n\n"
+
+              + "Course-Assistant Options:\n"
+              + "(6) Grade Student\n"
+              + "(7) Remove Student";
     } else {
       menu +=
           "(1) Account Details\n"
