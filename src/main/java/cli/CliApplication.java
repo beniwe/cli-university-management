@@ -2,9 +2,10 @@ package cli;
 
 import cli.screens.LoginScreen;
 import cli.screens.RegisterScreen;
-import java.util.Scanner;
 import org.jooq.DSLContext;
 import student.storage.PostgreSqlStudentRepository;
+
+import java.util.Scanner;
 
 public class CliApplication implements Runnable {
   private final LoginScreen loginScreen;
@@ -29,19 +30,20 @@ public class CliApplication implements Runnable {
     try (Scanner in = new Scanner(System.in)) {
       while (true) {
         printMenu();
-        var choice = in.nextLine();
+
+        String choice = in.nextLine();
 
         if (choice.equals("1")) {
           loginScreen.show(in);
-
         } else if (choice.equals("2")) {
           this.registerScreen.show(in);
-
         } else if (choice.equals("3")) {
           exit();
         } else {
           System.err.println("Invalid input.");
         }
+
+        in.nextLine();
       }
     }
   }

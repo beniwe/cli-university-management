@@ -1,12 +1,16 @@
 package query;
 
-import static org.example.models.Tables.*;
-
-import java.util.ArrayList;
-import java.util.List;
+import command.RecordToTableElement;
 import org.example.models.tables.records.CourseRecord;
 import org.example.models.tables.records.DegreeProgramRecord;
 import org.jooq.DSLContext;
+import org.example.models.tables.pojos.Course;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.example.models.Tables.COURSE;
+import static org.example.models.Tables.DEGREE_PROGRAM;
 
 public class GetTableQuery {
   private GetTableQuery() {}
@@ -24,14 +28,14 @@ public class GetTableQuery {
     return programs;
   }
 
-  public static List<String> courseTable(DSLContext sql) {
+  public static List<Course> courseTable(DSLContext sql) {
 
-    List<String> courses = new ArrayList<>();
+    List<Course> courses = new ArrayList<>();
 
     var courseRecords = sql.fetch(COURSE);
 
-    for (CourseRecord currCourse : courseRecords) {
-      courses.add("(" + currCourse.getCourseId() + ")" + currCourse.getName());
+    for (CourseRecord currCourseRecord : courseRecords) {
+      courses.add(RecordToTableElement.recordToCourse(currCourseRecord));
     }
 
     return courses;

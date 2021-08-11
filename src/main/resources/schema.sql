@@ -77,9 +77,6 @@ values('Benjamin Weber', '2002-02-27', 1, '2021-01-01', '40bd001563085fc35165329
 insert into student_course(fk_student_id, fk_course_id, is_course_assistant, grade)
 values(10000000, 1, true, 3);
 
-insert into student_course(fk_student_id, fk_course_id, is_course_assistant)
-values(10000000,  2, false);
-
 insert into student_course(fk_student_id, fk_course_id, is_course_assistant, grade)
 values(10000000, 3, false, 2);
 

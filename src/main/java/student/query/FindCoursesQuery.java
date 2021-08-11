@@ -2,10 +2,11 @@ package student.query;
 
 import command.RecordToTableElement;
 import org.example.models.tables.pojos.Course;
-import org.example.models.tables.pojos.Student;
 import org.example.models.tables.records.StudentCourseRecord;
 import org.jooq.DSLContext;
+import query.GetTableQuery;
 import query.Query;
+import storage.PostgresConnectionFactory;
 import student.NoGradeException;
 
 import java.util.ArrayList;
@@ -67,5 +68,32 @@ public class FindCoursesQuery implements Query<List<Course>> {
         }
 
         return studentCourse.getGrade();
+    }
+
+    public List<Course> notEnrolledInCourses() {
+        List<Course> notEnrolledCourses = GetTableQuery.courseTable(PostgresConnectionFactory.build());
+        List<Course> enrolledCourses;
+
+        try {
+            enrolledCourses = this.execute();
+        } catch (NoSuchElementException e) {
+            return notEnrolledCourses;
+        }
+
+        var toRemove = new ArrayList<Course>();
+
+        for (Course currCourse : notEnrolledCourses) {
+            for (Course currEnrolledCourse : enrolledCourses) {
+                if (currCourse.getCourseId() == currEnrolledCourse.getCourseId()) {
+                    toRemove.add(currCourse);
+                }
+            }
+        }
+
+        for (Course toRemoveCourse : toRemove) {
+            notEnrolledCourses.remove(toRemoveCourse);
+        }
+
+        return notEnrolledCourses;
     }
 }

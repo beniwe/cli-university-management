@@ -1,10 +1,6 @@
 package cli.screens;
 
 import cli.CliApplication;
-
-import java.util.NoSuchElementException;
-import java.util.Scanner;
-
 import org.example.models.tables.pojos.Course;
 import org.example.models.tables.pojos.DegreeProgram;
 import org.example.models.tables.pojos.Professor;
@@ -13,6 +9,11 @@ import storage.PostgresConnectionFactory;
 import student.NoGradeException;
 import student.query.FindCoursesQuery;
 import student.query.FindDegreeProgramQuery;
+import student.storage.PostgreSqlStudentRepository;
+import student.storage.StudentRepository;
+
+import java.util.NoSuchElementException;
+import java.util.Scanner;
 
 public class Session implements Screen {
   private Professor professor;
@@ -106,11 +107,17 @@ public class Session implements Screen {
       }
 
       else if (choice.equals("3")){
-
+        CourseEnrollScreen enrollScreen = new CourseEnrollScreen(student);
+        enrollScreen.show(in);
       }
 
       else if (choice.equals("4")) {
+        StudentRepository repository = new PostgreSqlStudentRepository(PostgresConnectionFactory.build());
 
+        repository.remove(student.getStudentId());
+        System.out.println("You are now no longer in the System");
+
+        return;
       }
 
       else if (choice.equals("5")) {
@@ -126,7 +133,7 @@ public class Session implements Screen {
       }
 
       else {
-        System.out.println("invalid input");
+        System.out.println("Invalid input");
       }
     }
   }
@@ -228,12 +235,22 @@ public class Session implements Screen {
     for (Course currCourse : courseList) {
 
       try {
+
+        if (currCourse.getAssignedProfessor() != null) {
+          courses += String.format("%s | ECTS(%2.1f) | Professor(%s)", currCourse.getName(), currCourse.getEcts(), currCourse.getAssignedProfessor());
+        }
+
+        else {
+          courses += String.format("%s | ECTS(%2.1f) | Professor(%s)", currCourse.getName(), currCourse.getEcts(), "Unknown");
+        }
+
         int currGrade = courseQuery.getGrade(currCourse.getCourseId());
 
-        courses += currCourse.getName() + " | ECTS(" + currCourse.getEcts() + ")" + " | Grade(" + currGrade + ")\n";
+        courses += " | Grade(" + currGrade + ")\n";
+
       } catch(NoGradeException e) {
 
-          courses += currCourse.getName() + " | ECTS(" + currCourse.getEcts() + ")\n";
+        courses += "\n";
       }
     }
 
