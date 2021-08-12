@@ -1,7 +1,8 @@
-package cli.screens;
+package cli.screens.mainScreens;
 
 import authentication.Authenticate;
 import cli.CliApplication;
+import cli.screens.Screen;
 import org.jooq.DSLContext;
 
 import java.util.InputMismatchException;

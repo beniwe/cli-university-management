@@ -24,6 +24,34 @@ public class FindStudentQuery implements Query<Optional<Student>> {
     this.studentId = studentId;
   }
 
+  public List<Student> getStudentsInCourse(int courseId) {
+    DSLContext sql = PostgresConnectionFactory.build();
+
+    List<Student> result = new ArrayList<>();
+    var records = sql.fetch(STUDENT_COURSE, STUDENT_COURSE.FK_COURSE_ID.eq(courseId));
+
+    if (records.isEmpty()) {
+      throw new NoSuchElementException("(!) No students enrolled in this course");
+    }
+    for (StudentCourseRecord currRecord : records) {
+      var repository = new PostgreSqlStudentRepository(sql);
+      var findStudent = new FindStudentQuery(repository, currRecord.getFkStudentId());
+
+      Student currStudent = findStudent.execute().get();
+      Long sessionStudentId = studentId;
+
+      if (!(sessionStudentId.equals(currStudent.getStudentId()))) {
+        result.add(currStudent);
+      }
+    }
+
+    if (result.isEmpty()) {
+      throw new IllegalStateException("(!) You are the only student in this course");
+    }
+
+    return result;
+  }
+
   @Override
   public Optional<Student> execute() {
     return studentRepository.findStudentById(studentId);
@@ -46,7 +74,8 @@ public class FindStudentQuery implements Query<Optional<Student>> {
       boolean isGraded = findStudent.gradedCheck(courseId);
       Long sessionStudentId = studentId;
 
-      if (!isGraded && !(sessionStudentId == currStudent.getStudentId())) {
+      if (!isGraded && !(sessionStudentId.equals(currStudent.getStudentId()))) {
+
         result.add(currStudent);
       }
     }

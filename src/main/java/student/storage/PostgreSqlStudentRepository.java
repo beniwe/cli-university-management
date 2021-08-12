@@ -113,4 +113,11 @@ public class PostgreSqlStudentRepository implements StudentRepository {
 
     System.out.println("\n" + student.getName() + " has been graded (" + grade + ") in course: " + course.getName());
   }
+
+  public void removeFromCourse(Long studentId, int courseId) {
+    sql.deleteFrom(STUDENT_COURSE).
+            where(STUDENT_COURSE.FK_STUDENT_ID.eq(studentId),
+                    STUDENT_COURSE.FK_COURSE_ID.eq(courseId)).
+            execute();
+  }
 }

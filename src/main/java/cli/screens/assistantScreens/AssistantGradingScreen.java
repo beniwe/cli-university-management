@@ -1,10 +1,10 @@
-package cli.screens;
+package cli.screens.assistantScreens;
 
 import cli.CliApplication;
+import cli.screens.Screen;
 import command.GradingCommand;
 import org.example.models.tables.pojos.Course;
 import org.example.models.tables.pojos.Student;
-import org.jooq.DSLContext;
 import storage.PostgresConnectionFactory;
 import student.query.FindCoursesQuery;
 import student.query.FindStudentQuery;
@@ -12,7 +12,7 @@ import student.storage.PostgreSqlStudentRepository;
 
 import java.util.*;
 
-public class AssistantGradingScreen implements Screen{
+public class AssistantGradingScreen implements Screen {
     private Student student;
 
     public AssistantGradingScreen(Student student) {
@@ -31,9 +31,7 @@ public class AssistantGradingScreen implements Screen{
         while (true) {
             List<Integer> courseIds = printGradableCourses();
 
-            System.out.print("Choose a course: ");
-
-            DSLContext sql = PostgresConnectionFactory.build();
+            System.out.print("Course: ");
 
             try {
                 courseChoice = in.nextInt();
@@ -56,7 +54,7 @@ public class AssistantGradingScreen implements Screen{
         }
 
         while (true) {
-            List<Long> studentIds = null;
+            List<Long> studentIds;
 
             try {
                 studentIds = printNonGradedStudents(courseId);
@@ -70,7 +68,7 @@ public class AssistantGradingScreen implements Screen{
                 return;
             }
 
-            System.out.print("Choose a student: ");
+            System.out.print("Student: ");
 
             try {
                 studentChoice = in.nextInt();
@@ -116,14 +114,9 @@ public class AssistantGradingScreen implements Screen{
                 return;
             }
         }
-
-
-
-
-
     }
 
-    private List<Integer> printGradableCourses() {
+    public List<Integer> printGradableCourses() {
         String courses = "";
 
         List<Integer> courseIds = new ArrayList<>();
@@ -144,7 +137,7 @@ public class AssistantGradingScreen implements Screen{
 
         sb.deleteCharAt(courses.length() - 1);
 
-        System.out.println("\nGradable Courses:\n" + CliApplication.sectionString(sb.toString()));
+        System.out.println("\nChoose Course:\n" + CliApplication.sectionString(sb.toString()));
 
         return courseIds;
     }
@@ -160,7 +153,7 @@ public class AssistantGradingScreen implements Screen{
 
         for (Student currStudent : studentList) {
 
-            students += String.format("(%d) %s\n", listNumbers, currStudent.getName());
+            students += String.format("(%d) %s | ID %s\n", listNumbers, currStudent.getName(), currStudent.getName());
 
             studentIds.add(currStudent.getStudentId());
 
@@ -171,7 +164,7 @@ public class AssistantGradingScreen implements Screen{
 
         sb.deleteCharAt(students.length() - 1);
 
-        System.out.println("\nGradable Students:\n" + CliApplication.sectionString(sb.toString()));
+        System.out.println("\nChoose Student:\n" + CliApplication.sectionString(sb.toString()));
 
         return studentIds;
     }

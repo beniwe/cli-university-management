@@ -1,7 +1,7 @@
 package cli;
 
-import cli.screens.LoginScreen;
-import cli.screens.RegisterScreen;
+import cli.screens.mainScreens.LoginScreen;
+import cli.screens.mainScreens.RegisterScreen;
 import org.jooq.DSLContext;
 import student.storage.PostgreSqlStudentRepository;
 

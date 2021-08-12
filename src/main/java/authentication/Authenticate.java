@@ -1,6 +1,6 @@
 package authentication;
 
-import cli.screens.Session;
+import cli.screens.mainScreens.Session;
 import org.example.models.tables.pojos.Professor;
 import org.example.models.tables.pojos.Student;
 import org.jooq.DSLContext;

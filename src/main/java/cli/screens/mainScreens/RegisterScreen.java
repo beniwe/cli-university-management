@@ -1,6 +1,7 @@
-package cli.screens;
+package cli.screens.mainScreens;
 
 import cli.CliApplication;
+import cli.screens.Screen;
 import org.example.models.tables.pojos.Student;
 import query.GetTableQuery;
 import storage.PostgresConnectionFactory;

@@ -1,6 +1,10 @@
-package cli.screens;
+package cli.screens.mainScreens;
 
 import cli.CliApplication;
+import cli.screens.CourseEnrollScreen;
+import cli.screens.Screen;
+import cli.screens.assistantScreens.AssistantGradingScreen;
+import cli.screens.assistantScreens.AssistantRemoveScreen;
 import org.example.models.tables.pojos.Course;
 import org.example.models.tables.pojos.DegreeProgram;
 import org.example.models.tables.pojos.Professor;
@@ -130,7 +134,8 @@ public class Session implements Screen {
       }
 
       else if (student.getIsCourseAssistant() && choice.equals("7")) {
-
+        AssistantRemoveScreen assistantRemoving = new AssistantRemoveScreen(student);
+        assistantRemoving.show(in);
       }
 
       else {
