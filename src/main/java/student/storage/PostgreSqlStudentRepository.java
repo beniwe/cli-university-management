@@ -5,6 +5,7 @@ import org.example.models.tables.pojos.Course;
 import org.example.models.tables.pojos.Student;
 import org.jooq.DSLContext;
 import org.jooq.exception.DataAccessException;
+import student.query.FindCoursesQuery;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -95,5 +96,21 @@ public class PostgreSqlStudentRepository implements StudentRepository {
     ).execute();
 
     System.out.println("You are now enrolled in: " + course.getName());
+  }
+
+  public void grading(Long studentId, Integer courseId, int grade) {
+    sql.update(STUDENT_COURSE).
+            set(STUDENT_COURSE.GRADE, grade).
+            where(STUDENT_COURSE.FK_STUDENT_ID.eq(studentId),
+                    STUDENT_COURSE.FK_COURSE_ID.eq(courseId)).
+            execute();
+
+    Student student = findStudentById(studentId).get();
+
+    FindCoursesQuery coursesQuery = new FindCoursesQuery(sql, null);
+
+    Course course = coursesQuery.findCourseById(courseId).get();
+
+    System.out.println(student.getName() + " has been graded (" + grade + ") in course: " + course.getName());
   }
 }

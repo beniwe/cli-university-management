@@ -60,7 +60,14 @@ insert into degree_program(name) values('Medizinische Informatik');
 insert into degree_program(name) values('Maschinenbau');
 insert into degree_program(name) values('Elektrotechnik');
 
-insert into course(name, ects) values('Algebra und diskrete Mathematik', 8.0);
+insert into professor(name, birth_date, password, is_admin)
+values('Bernhard Gittenberger', '1800-01-01', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', true);
+
+insert into student(name, birth_date, enrolled_in, enrolled_since, password, is_course_assistant)
+values('Benjamin Weber', '2002-02-27', 1, '2021-01-01', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', true);
+
+
+insert into course(name, ects, assigned_professor) values('Algebra und diskrete Mathematik', 8.0, 1000000);
 insert into course(name, ects) values('Einführung in die Programmierung', 5.5);
 insert into course(name, ects) values('Denkweisen der Informatik', 3.0);
 insert into course(name, ects) values('Analysis', 6.5);
@@ -68,11 +75,6 @@ insert into course(name, ects) values('Grundlagen der Organisation', 3.0);
 insert into course(name, ects) values('Rechnungswesen', 2.0);
 insert into course(name, ects) values('Technische Grundlagen der Informatik', 5.5);
 
-insert into professor(name, birth_date, password, is_admin)
-values('Bernhard Gittenberger', '1800-01-01', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', true);
-
-insert into student(name, birth_date, enrolled_in, enrolled_since, password, is_course_assistant)
-values('Benjamin Weber', '2002-02-27', 1, '2021-01-01', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', true);
 
 insert into student_course(fk_student_id, fk_course_id, is_course_assistant, grade)
 values(10000000, 1, true, 3);

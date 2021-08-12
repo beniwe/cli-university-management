@@ -40,7 +40,7 @@ public class CliApplication implements Runnable {
         } else if (choice.equals("3")) {
           exit();
         } else {
-          System.err.println("Invalid input.");
+          System.err.println("(!) Invalid input.");
         }
 
         in.nextLine();

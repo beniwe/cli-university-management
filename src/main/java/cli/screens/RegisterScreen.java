@@ -1,16 +1,16 @@
 package cli.screens;
 
 import cli.CliApplication;
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
-import java.util.List;
-import java.util.Scanner;
 import org.example.models.tables.pojos.Student;
 import query.GetTableQuery;
 import storage.PostgresConnectionFactory;
 import student.command.EnrollStudentCommand;
 import student.storage.StudentRepository;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+import java.util.List;
+import java.util.Scanner;
 
 public class RegisterScreen implements Screen {
   private final StudentRepository studentRepository;
@@ -39,7 +39,7 @@ public class RegisterScreen implements Screen {
 
       } catch (DateTimeParseException e) {
         System.out.println(
-            "\n" + CliApplication.sectionString("wrong format...try again\n[year]-[month]-[day]"));
+            "\n" + CliApplication.sectionString("(!) wrong format...try again\n[year]-[month]-[day]"));
       }
     }
 
@@ -56,7 +56,7 @@ public class RegisterScreen implements Screen {
     new EnrollStudentCommand(studentRepository, studentToEnroll).execute();
   }
 
-  public void printDegreePrograms() {
+  private void printDegreePrograms() {
     List<String> degreeProgramList;
     String degreePrograms = "";
 

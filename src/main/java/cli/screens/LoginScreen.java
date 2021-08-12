@@ -2,10 +2,10 @@ package cli.screens;
 
 import authentication.Authenticate;
 import cli.CliApplication;
+import org.jooq.DSLContext;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
-import org.jooq.DSLContext;
 
 public class LoginScreen implements Screen {
   private DSLContext sql;
@@ -30,7 +30,7 @@ public class LoginScreen implements Screen {
 
           break;
         } catch (InputMismatchException e) {
-          System.out.println("\nInput needs to be an integer\n");
+          System.out.println("\n(!) Input needs to be an integer\n");
 
           in.nextLine();
         }
@@ -63,7 +63,7 @@ public class LoginScreen implements Screen {
   }
 
   private void printFailedLoginMessage() {
-    System.out.println("\n" + "Invalid ID and/or password");
+    System.out.println("\n(!) Invalid ID and/or password");
     System.out.println(CliApplication.sectionString("(1) Try again\n" + "(2) Exit"));
   }
 }

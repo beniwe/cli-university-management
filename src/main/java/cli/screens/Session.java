@@ -36,7 +36,7 @@ public class Session implements Screen {
     }
   }
 
-  public void professorSession(Scanner in) {
+  private void professorSession(Scanner in) {
     System.out.println("Hello " + professor.getName());
 
     while(true) {
@@ -81,12 +81,12 @@ public class Session implements Screen {
       }
 
       else {
-        System.out.println("invalid input");
+        System.out.println("(!) Invalid input");
       }
     }
   }
 
-  public void studentSession(Scanner in) {
+  private void studentSession(Scanner in) {
     System.out.println("Hello " + student.getName());
 
     while(true) {
@@ -115,7 +115,7 @@ public class Session implements Screen {
         StudentRepository repository = new PostgreSqlStudentRepository(PostgresConnectionFactory.build());
 
         repository.remove(student.getStudentId());
-        System.out.println("You are now no longer in the System");
+        System.out.println("(!) You are now no longer in the System");
 
         return;
       }
@@ -125,7 +125,8 @@ public class Session implements Screen {
       }
 
       else if (student.getIsCourseAssistant() && choice.equals("6")) {
-
+        AssistantGradingScreen assistantGrading = new AssistantGradingScreen(student);
+        assistantGrading.show(in);
       }
 
       else if (student.getIsCourseAssistant() && choice.equals("7")) {
@@ -133,12 +134,12 @@ public class Session implements Screen {
       }
 
       else {
-        System.out.println("Invalid input");
+        System.out.println("(!) Invalid input");
       }
     }
   }
 
-  public void printProfessorMenu() {
+  private void printProfessorMenu() {
     String menu = "";
 
     if (professor.getIsAdmin() == true) {
@@ -197,7 +198,7 @@ public class Session implements Screen {
     System.out.println("\nMenu:\n" + CliApplication.sectionString(menu));
   }
 
-  public void printAccountDetails() {
+  private void printAccountDetails() {
     String accountDetails = "";
 
     if (professor != null) {
@@ -226,7 +227,7 @@ public class Session implements Screen {
     System.out.println("\nAccount Details:\n" + CliApplication.sectionString(accountDetails));
   }
 
-  public void printCurrentCourses() {
+  private void printCurrentCourses() {
     String courses = "";
 
     var courseQuery = new FindCoursesQuery(PostgresConnectionFactory.build(), student.getStudentId());

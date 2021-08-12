@@ -46,11 +46,11 @@ public class CourseEnrollScreen implements Screen{
                 }
             }
 
-            System.out.println("invalid input");
+            System.out.println("Invalid input");
         }
     }
 
-    public List<String> printOpenCourses() {
+    private List<String> printOpenCourses() {
         String courses = "";
 
         List<String> courseIds = new ArrayList<>();

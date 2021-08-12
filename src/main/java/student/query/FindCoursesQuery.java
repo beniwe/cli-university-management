@@ -31,7 +31,7 @@ public class FindCoursesQuery implements Query<List<Course>> {
         var query = sql.fetch(STUDENT_COURSE, STUDENT_COURSE.FK_STUDENT_ID.eq(id));
 
         if (query.isEmpty()) {
-            throw new NoSuchElementException("student isn't enrolled in any course");
+            throw new NoSuchElementException("(!) Student isn't enrolled in any course");
         }
 
         var courseList = new ArrayList<Course>();
@@ -60,11 +60,11 @@ public class FindCoursesQuery implements Query<List<Course>> {
         var studentCourse = sql.fetchOne(STUDENT_COURSE, STUDENT_COURSE.FK_STUDENT_ID.eq(id), STUDENT_COURSE.FK_COURSE_ID.eq(courseId));
 
         if (studentCourse == null) {
-            throw new NoSuchElementException("student isn't enrolled in given course");
+            throw new NoSuchElementException("(!) Student isn't enrolled in given course");
         }
 
         if (studentCourse.getGrade() == null) {
-            throw new NoGradeException("student has not been graded in given course");
+            throw new NoGradeException("(!) Student has not been graded in given course");
         }
 
         return studentCourse.getGrade();
@@ -95,5 +95,23 @@ public class FindCoursesQuery implements Query<List<Course>> {
         }
 
         return notEnrolledCourses;
+    }
+
+    public List<Course> findAssistantCourses() {
+        List<Course> result = new ArrayList<>();
+
+        var records = sql.fetch(STUDENT_COURSE, STUDENT_COURSE.FK_STUDENT_ID.eq(id), STUDENT_COURSE.IS_COURSE_ASSISTANT.eq(true));
+
+        if (records.isEmpty()) {
+            throw new NoSuchElementException("(!) Student has not been assigned to be a course assistant");
+        }
+
+        for (StudentCourseRecord currRecord : records) {
+            Course currCourse = findCourseById(currRecord.getFkCourseId()).get();
+
+            result.add(currCourse);
+        }
+
+        return result;
     }
 }
