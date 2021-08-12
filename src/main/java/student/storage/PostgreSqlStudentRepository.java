@@ -111,6 +111,6 @@ public class PostgreSqlStudentRepository implements StudentRepository {
 
     Course course = coursesQuery.findCourseById(courseId).get();
 
-    System.out.println(student.getName() + " has been graded (" + grade + ") in course: " + course.getName());
+    System.out.println("\n" + student.getName() + " has been graded (" + grade + ") in course: " + course.getName());
   }
 }

@@ -1,6 +1,7 @@
 package cli.screens;
 
 import cli.CliApplication;
+import command.GradingCommand;
 import org.example.models.tables.pojos.Course;
 import org.example.models.tables.pojos.Student;
 import org.jooq.DSLContext;
@@ -21,40 +22,44 @@ public class AssistantGradingScreen implements Screen{
 
     @Override
     public void show(Scanner in) {
+        Integer courseId;
+        Long studentId;
+        int courseChoice;
+        int studentChoice;
+        int grade;
 
         while (true) {
             List<Integer> courseIds = printGradableCourses();
-
-            Integer courseId;
-            Long studentId;
 
             System.out.print("Choose a course: ");
 
             DSLContext sql = PostgresConnectionFactory.build();
 
-            int choice;
-
             try {
-                choice = in.nextInt();
+                courseChoice = in.nextInt();
             } catch (InputMismatchException e) {
-                System.out.println("Invalid input");
+                System.out.println("(!) Invalid input");
 
                 in.nextLine();
                 continue;
             }
 
-            if (choice >= 1 && choice <= courseIds.size()) {
-                courseId = courseIds.get(choice-1);
-            }
+            if (courseChoice >= 1 && courseChoice <= courseIds.size()) {
+                courseId = courseIds.get(courseChoice - 1);
 
-            else {
-                System.out.println("Invalid input");
+                break;
+            } else {
+                System.out.println("(!) Invalid input");
 
                 continue;
             }
+        }
+
+        while (true) {
+            List<Long> studentIds = null;
 
             try {
-                List<Long> studentIds = printNonGradedStudents(courseId);
+                studentIds = printNonGradedStudents(courseId);
             } catch (NoSuchElementException e) {
                 System.out.println(e.getMessage());
                 in.nextLine();
@@ -65,13 +70,57 @@ public class AssistantGradingScreen implements Screen{
                 return;
             }
 
-
             System.out.print("Choose a student: ");
 
+            try {
+                studentChoice = in.nextInt();
+            } catch (InputMismatchException e) {
+                System.out.println("(!) Invalid input");
 
+                in.nextLine();
+                continue;
+            }
 
+            if (studentChoice >= 1 && studentChoice <= studentIds.size()) {
+                studentId = studentIds.get(studentChoice - 1);
 
+                break;
+
+            } else {
+                System.out.println("(!) Invalid input");
+
+                continue;
+            }
         }
+
+        while (true) {
+
+            System.out.print("Grade (1-5): ");
+
+            try {
+                grade = in.nextInt();
+            } catch (InputMismatchException e) {
+                System.out.println("(!) Invalid input");
+
+                in.nextLine();
+                continue;
+            }
+
+            if (grade >= 1 && grade <= 5) {
+                var repository = new PostgreSqlStudentRepository(PostgresConnectionFactory.build());
+                GradingCommand grading = new GradingCommand(repository, studentId, courseId, grade);
+
+                grading.execute();
+
+                in.nextLine();
+                return;
+            }
+        }
+
+
+
+
+
     }
 
     private List<Integer> printGradableCourses() {
