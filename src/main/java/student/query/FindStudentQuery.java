@@ -71,10 +71,19 @@ public class FindStudentQuery implements Query<Optional<Student>> {
       var findStudent = new FindStudentQuery(repository, currRecord.getFkStudentId());
 
       Student currStudent = findStudent.execute().get();
-      boolean isGraded = findStudent.gradedCheck(courseId);
+      boolean notGraded = !findStudent.gradedCheck(courseId);
       Long sessionStudentId = studentId;
+      boolean notSameStudent;
 
-      if (!isGraded && !(sessionStudentId.equals(currStudent.getStudentId()))) {
+      if (sessionStudentId == null) {
+        notSameStudent = true;
+      }
+
+      else {
+        notSameStudent = !(sessionStudentId.equals(currStudent.getStudentId()));
+      }
+
+      if (notGraded && notSameStudent) {
 
         result.add(currStudent);
       }
@@ -88,6 +97,45 @@ public class FindStudentQuery implements Query<Optional<Student>> {
   }
 
   private boolean gradedCheck(int courseId) {
+    var sql = PostgresConnectionFactory.build();
+    var studentCourseRecord = sql.fetchOne(STUDENT_COURSE, STUDENT_COURSE.FK_STUDENT_ID.eq(studentId), STUDENT_COURSE.FK_COURSE_ID.eq(courseId));
+
+    if (studentCourseRecord.getGrade() != null) {
+      return true;
+    }
+
+    return false;
+  }
+
+  public List<Student> getNonAssistantStudent(int courseId) {
+    DSLContext sql = PostgresConnectionFactory.build();
+
+    List<Student> result = new ArrayList<>();
+    var records = sql.fetch(STUDENT_COURSE, STUDENT_COURSE.FK_COURSE_ID.eq(courseId));
+
+    if (records.isEmpty()) {
+      throw new NoSuchElementException("(!) No students enrolled in this course");
+    }
+    for (StudentCourseRecord currRecord : records) {
+      var repository = new PostgreSqlStudentRepository(sql);
+      var findStudent = new FindStudentQuery(repository, currRecord.getFkStudentId());
+
+      Student currStudent = findStudent.execute().get();
+      boolean notAssistant = !findStudent.assistantCheck(courseId);
+
+      if (notAssistant) {
+        result.add(currStudent);
+      }
+    }
+
+    if (result.isEmpty()) {
+      throw new IllegalStateException("(!) Every student in this course is already an assistant");
+    }
+
+    return result;
+  }
+
+  private boolean assistantCheck(int courseId) {
     var sql = PostgresConnectionFactory.build();
     var studentCourseRecord = sql.fetchOne(STUDENT_COURSE, STUDENT_COURSE.FK_STUDENT_ID.eq(studentId), STUDENT_COURSE.FK_COURSE_ID.eq(courseId));
 

@@ -2,6 +2,7 @@ package cli.screens.mainScreens;
 
 import cli.CliApplication;
 import cli.screens.CourseEnrollScreen;
+import cli.screens.CourseManagementScreen;
 import cli.screens.Screen;
 import cli.screens.assistantScreens.AssistantGradingScreen;
 import cli.screens.assistantScreens.AssistantRemoveScreen;
@@ -9,6 +10,8 @@ import org.example.models.tables.pojos.Course;
 import org.example.models.tables.pojos.DegreeProgram;
 import org.example.models.tables.pojos.Professor;
 import org.example.models.tables.pojos.Student;
+import professor.query.FindProfessorQuery;
+import professor.storage.PostgreSqlProfessorRepository;
 import storage.PostgresConnectionFactory;
 import student.NoGradeException;
 import student.query.FindCoursesQuery;
@@ -53,7 +56,9 @@ public class Session implements Screen {
       }
 
       else if (choice.equals("2")) {
+        CourseManagementScreen courseManagement = new CourseManagementScreen(professor);
 
+        courseManagement.show(in);
       }
 
       else if (choice.equals("3")){
@@ -243,7 +248,11 @@ public class Session implements Screen {
       try {
 
         if (currCourse.getAssignedProfessor() != null) {
-          courses += String.format("%s | ECTS(%2.1f) | Professor(%s)", currCourse.getName(), currCourse.getEcts(), currCourse.getAssignedProfessor());
+          var repository = new PostgreSqlProfessorRepository(PostgresConnectionFactory.build());
+          var professorQuery = new FindProfessorQuery(repository, currCourse.getAssignedProfessor());
+          var professor = professorQuery.execute().get();
+
+          courses += String.format("%s | ECTS(%2.1f) | Professor(%s)", currCourse.getName(), currCourse.getEcts(), professor.getName());
         }
 
         else {

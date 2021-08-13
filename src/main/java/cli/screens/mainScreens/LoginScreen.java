@@ -50,13 +50,20 @@ public class LoginScreen implements Screen {
         break;
 
       } catch (IllegalArgumentException e) {
-        printFailedLoginMessage();
 
-        int choice = in.nextInt();
+        while (true) {
+          printFailedLoginMessage();
 
-        if (choice == 1) {
-        } else if (choice == 2) {
-          return;
+          String choice = in.nextLine();
+
+          if (choice.equals("1")) {
+            break;
+          } else if (choice.equals("2")) {
+            return;
+          }
+          else {
+            System.out.println("(!) Invalid input");
+          }
         }
       }
     }

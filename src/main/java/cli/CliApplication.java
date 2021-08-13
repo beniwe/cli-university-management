@@ -28,10 +28,14 @@ public class CliApplication implements Runnable {
   @Override
   public void run() {
     try (Scanner in = new Scanner(System.in)) {
-      while (true) {
-        printMenu();
+      String choice = null;
 
-        String choice = in.nextLine();
+      while (true) {
+        if (choice != "") {
+          printMenu();
+        }
+
+        choice = in.nextLine();
 
         if (choice.equals("1")) {
           loginScreen.show(in);
@@ -39,11 +43,11 @@ public class CliApplication implements Runnable {
           this.registerScreen.show(in);
         } else if (choice.equals("3")) {
           exit();
+        } else if (choice.equals("")) {
+          continue;
         } else {
           System.err.println("(!) Invalid input.");
         }
-
-        in.nextLine();
       }
     }
   }

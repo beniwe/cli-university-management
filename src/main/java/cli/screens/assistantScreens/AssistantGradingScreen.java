@@ -52,67 +52,16 @@ public class AssistantGradingScreen implements Screen {
                 continue;
             }
         }
-
-        while (true) {
-            List<Long> studentIds;
-
-            try {
-                studentIds = printNonGradedStudents(courseId);
-            } catch (NoSuchElementException e) {
-                System.out.println(e.getMessage());
-                in.nextLine();
-                return;
-            } catch (IllegalStateException e) {
-                System.out.println(e.getMessage());
-                in.nextLine();
-                return;
-            }
-
-            System.out.print("Student: ");
-
-            try {
-                studentChoice = in.nextInt();
-            } catch (InputMismatchException e) {
-                System.out.println("(!) Invalid input");
-
-                in.nextLine();
-                continue;
-            }
-
-            if (studentChoice >= 1 && studentChoice <= studentIds.size()) {
-                studentId = studentIds.get(studentChoice - 1);
-
-                break;
-
-            } else {
-                System.out.println("(!) Invalid input");
-
-                continue;
-            }
-        }
-
-        while (true) {
-
-            System.out.print("Grade (1-5): ");
-
-            try {
-                grade = in.nextInt();
-            } catch (InputMismatchException e) {
-                System.out.println("(!) Invalid input");
-
-                in.nextLine();
-                continue;
-            }
-
-            if (grade >= 1 && grade <= 5) {
-                var repository = new PostgreSqlStudentRepository(PostgresConnectionFactory.build());
-                GradingCommand grading = new GradingCommand(repository, studentId, courseId, grade);
-
-                grading.execute();
-
-                in.nextLine();
-                return;
-            }
+        try {
+            cliGrading(in, courseId);
+        } catch (NoSuchElementException e) {
+            System.out.println(e.getMessage());
+            in.nextLine();
+            return;
+        } catch (IllegalStateException e) {
+            System.out.println(e.getMessage());
+            in.nextLine();
+            return;
         }
     }
 
@@ -142,18 +91,27 @@ public class AssistantGradingScreen implements Screen {
         return courseIds;
     }
 
-    private List<Long> printNonGradedStudents(int courseId) {
+    public List<Long> printNonGradedStudents(int courseId) {
         String students = "";
 
         List<Long> studentIds = new ArrayList<>();
         var repository = new PostgreSqlStudentRepository(PostgresConnectionFactory.build());
-        var studentQuery = new FindStudentQuery(repository, student.getStudentId());
+        FindStudentQuery studentQuery;
+
+        if (student == null) {
+            studentQuery = new FindStudentQuery(repository, null);
+        }
+
+        else {
+            studentQuery = new FindStudentQuery(repository, student.getStudentId());
+        }
+
         var studentList = studentQuery.getNonGradedStudentsInCourse(courseId);
         int listNumbers = 1;
 
         for (Student currStudent : studentList) {
 
-            students += String.format("(%d) %s | ID %s\n", listNumbers, currStudent.getName(), currStudent.getName());
+            students += String.format("(%d) %s | ID: %s\n", listNumbers, currStudent.getName(), currStudent.getStudentId());
 
             studentIds.add(currStudent.getStudentId());
 
@@ -167,5 +125,63 @@ public class AssistantGradingScreen implements Screen {
         System.out.println("\nChoose Student:\n" + CliApplication.sectionString(sb.toString()));
 
         return studentIds;
+    }
+
+    public void cliGrading(Scanner in, int courseId) {
+        Long studentId;
+
+        while (true) {
+            int studentChoice;
+            List<Long> studentIds;
+
+            studentIds = printNonGradedStudents(courseId);
+
+            System.out.print("Student: ");
+
+            try {
+                studentChoice = in.nextInt();
+            } catch (InputMismatchException e) {
+                System.out.println("(!) Invalid input");
+
+                in.nextLine();
+                continue;
+            }
+
+            if (studentChoice >= 1 && studentChoice <= studentIds.size()) {
+                studentId = studentIds.get(studentChoice - 1);
+
+                break;
+
+            } else {
+                System.out.println("(!) Invalid input");
+
+                continue;
+            }
+        }
+
+        while (true) {
+            int grade;
+
+            System.out.print("Grade (1-5): ");
+
+            try {
+                grade = in.nextInt();
+            } catch (InputMismatchException e) {
+                System.out.println("(!) Invalid input");
+
+                in.nextLine();
+                continue;
+            }
+
+            if (grade >= 1 && grade <= 5) {
+                var repository = new PostgreSqlStudentRepository(PostgresConnectionFactory.build());
+                GradingCommand grading = new GradingCommand(repository, studentId, courseId, grade);
+
+                grading.execute();
+
+                in.nextLine();
+                return;
+            }
+        }
     }
 }

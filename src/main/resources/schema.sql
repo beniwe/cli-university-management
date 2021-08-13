@@ -63,17 +63,28 @@ insert into degree_program(name) values('Elektrotechnik');
 insert into professor(name, birth_date, password, is_admin)
 values('Bernhard Gittenberger', '1800-01-01', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', true);
 
+
 insert into student(name, birth_date, enrolled_in, enrolled_since, password, is_course_assistant)
 values('Benjamin Weber', '2002-02-27', 1, '2021-01-01', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', true);
+
+insert into student(name, birth_date, enrolled_in, enrolled_since, password, is_course_assistant)
+values('Elias Pinter', '2002-06-02', 2, '2021-01-01', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', false);
+
+insert into student(name, birth_date, enrolled_in, enrolled_since, password, is_course_assistant)
+values('Thomas Mayerl', '2000-08-01', 4, '2021-01-01', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', false);
+
+insert into student(name, birth_date, enrolled_in, enrolled_since, password, is_course_assistant)
+values('Benjamin Auinger', '1998-05-23', 1, '2021-01-01', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', false);
 
 
 insert into course(name, ects, assigned_professor) values('Algebra und diskrete Mathematik', 8.0, 1000000);
 insert into course(name, ects) values('Einführung in die Programmierung', 5.5);
 insert into course(name, ects) values('Denkweisen der Informatik', 3.0);
-insert into course(name, ects) values('Analysis', 6.5);
+insert into course(name, ects, assigned_professor) values('Analysis', 6.5, 1000000);
 insert into course(name, ects) values('Grundlagen der Organisation', 3.0);
 insert into course(name, ects) values('Rechnungswesen', 2.0);
 insert into course(name, ects) values('Technische Grundlagen der Informatik', 5.5);
+insert into course(name, ects, assigned_professor) values('Statistik', 6.0, 1000000);
 
 
 insert into student_course(fk_student_id, fk_course_id, is_course_assistant, grade)
@@ -87,5 +98,28 @@ values(10000000, 5, false, 1);
 
 insert into student_course(fk_student_id, fk_course_id, is_course_assistant)
 values(10000000, 6, true);
+
+insert into student_course(fk_student_id, fk_course_id, is_course_assistant)
+values(10000000, 7, false);
+
+insert into student_course(fk_student_id, fk_course_id, is_course_assistant)
+values(10000001, 1, false);
+
+insert into student_course(fk_student_id, fk_course_id, is_course_assistant)
+values(10000001, 7, false);
+
+
+insert into student_course(fk_student_id, fk_course_id, is_course_assistant)
+values(10000002, 1, true);
+
+insert into student_course(fk_student_id, fk_course_id, is_course_assistant)
+values(10000002, 7, false);
+
+insert into student_course(fk_student_id, fk_course_id, is_course_assistant)
+values(10000003, 1, false);
+
+insert into student_course(fk_student_id, fk_course_id, is_course_assistant)
+values(10000003, 7, false);
+
 
 
