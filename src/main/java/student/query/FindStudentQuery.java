@@ -40,7 +40,17 @@ public class FindStudentQuery implements Query<Optional<Student>> {
       Student currStudent = findStudent.execute().get();
       Long sessionStudentId = studentId;
 
-      if (!(sessionStudentId.equals(currStudent.getStudentId()))) {
+      boolean notSameStudent;
+
+      if (sessionStudentId == null) {
+        notSameStudent = true;
+      }
+
+      else {
+        notSameStudent = !(sessionStudentId.equals(currStudent.getStudentId()));
+      }
+
+      if (notSameStudent) {
         result.add(currStudent);
       }
     }

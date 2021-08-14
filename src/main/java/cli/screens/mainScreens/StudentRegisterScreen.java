@@ -13,10 +13,10 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
 
-public class RegisterScreen implements Screen {
+public class StudentRegisterScreen implements Screen {
   private final StudentRepository studentRepository;
 
-  public RegisterScreen(StudentRepository studentRepository) {
+  public StudentRegisterScreen(StudentRepository studentRepository) {
     this.studentRepository = studentRepository;
   }
 

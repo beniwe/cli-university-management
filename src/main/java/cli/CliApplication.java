@@ -1,7 +1,7 @@
 package cli;
 
 import cli.screens.mainScreens.LoginScreen;
-import cli.screens.mainScreens.RegisterScreen;
+import cli.screens.mainScreens.StudentRegisterScreen;
 import org.jooq.DSLContext;
 import student.storage.PostgreSqlStudentRepository;
 
@@ -9,10 +9,10 @@ import java.util.Scanner;
 
 public class CliApplication implements Runnable {
   private final LoginScreen loginScreen;
-  private final RegisterScreen registerScreen;
+  private final StudentRegisterScreen studentRegisterScreen;
 
   public CliApplication(DSLContext sql) {
-    this.registerScreen = new RegisterScreen(new PostgreSqlStudentRepository(sql));
+    this.studentRegisterScreen = new StudentRegisterScreen(new PostgreSqlStudentRepository(sql));
     this.loginScreen = new LoginScreen(sql);
   }
 
@@ -40,7 +40,7 @@ public class CliApplication implements Runnable {
         if (choice.equals("1")) {
           loginScreen.show(in);
         } else if (choice.equals("2")) {
-          this.registerScreen.show(in);
+          this.studentRegisterScreen.show(in);
         } else if (choice.equals("3")) {
           exit();
         } else if (choice.equals("")) {

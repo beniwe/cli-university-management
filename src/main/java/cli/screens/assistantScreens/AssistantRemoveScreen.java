@@ -25,9 +25,7 @@ public class AssistantRemoveScreen implements Screen {
 
 
         Integer courseId;
-        Long studentId;
         int courseChoice;
-        int studentChoice;
 
         while (true) {
             List<Integer> courseIds = getCourses.printGradableCourses();
@@ -53,23 +51,66 @@ public class AssistantRemoveScreen implements Screen {
                 continue;
             }
         }
+        try {
+            cliRemoving(in, courseId);
+        } catch (NoSuchElementException e) {
+            System.out.println(e.getMessage());
+            in.nextLine();
+            return;
+        } catch (IllegalStateException e) {
+            System.out.println(e.getMessage());
+            in.nextLine();
+            return;
+        }
+    }
+
+    public List<Long> printStudentsInCourse(int courseId) {
+        String students = "";
+
+        List<Long> studentIds = new ArrayList<>();
+        var repository = new PostgreSqlStudentRepository(PostgresConnectionFactory.build());
+        FindStudentQuery studentQuery;
+
+        if (student != null) {
+            studentQuery = new FindStudentQuery(repository, student.getStudentId());
+        }
+
+        else {
+            studentQuery = new FindStudentQuery(repository, null);
+        }
+
+        var studentList = studentQuery.getStudentsInCourse(courseId);
+        int listNumbers = 1;
+
+        for (Student currStudent : studentList) {
+
+            students += String.format("(%d) %s | ID: %d\n", listNumbers, currStudent.getName(), currStudent.getStudentId());
+
+            studentIds.add(currStudent.getStudentId());
+
+            listNumbers++;
+        }
+
+        StringBuilder sb = new StringBuilder(students);
+
+        sb.deleteCharAt(students.length() - 1);
+
+        System.out.println("\nChose:\n" + CliApplication.sectionString(sb.toString()));
+
+        return studentIds;
+    }
+
+    public void cliRemoving(Scanner in, int courseId) {
+        Long studentId;
+        int studentChoice;
+        var repository = new PostgreSqlStudentRepository(PostgresConnectionFactory.build());
 
         while (true) {
             List<Long> studentIds;
 
-            try {
-                studentIds = printStudentsInCourse(courseId);
-            } catch (NoSuchElementException e) {
-                System.out.println(e.getMessage());
-                in.nextLine();
-                return;
-            } catch (IllegalStateException e) {
-                System.out.println(e.getMessage());
-                in.nextLine();
-                return;
-            }
+            studentIds = printStudentsInCourse(courseId);
 
-            System.out.print("Choose a student: ");
+            System.out.print("Student: ");
 
             try {
                 studentChoice = in.nextInt();
@@ -105,33 +146,6 @@ public class AssistantRemoveScreen implements Screen {
 
         in.nextLine();
         return;
-    }
-
-    public List<Long> printStudentsInCourse(int courseId) {
-        String students = "";
-
-        List<Long> studentIds = new ArrayList<>();
-        var repository = new PostgreSqlStudentRepository(PostgresConnectionFactory.build());
-        var studentQuery = new FindStudentQuery(repository, student.getStudentId());
-        var studentList = studentQuery.getStudentsInCourse(courseId);
-        int listNumbers = 1;
-
-        for (Student currStudent : studentList) {
-
-            students += String.format("(%d) %s | ID: %d\n", listNumbers, currStudent.getName(), currStudent.getStudentId());
-
-            studentIds.add(currStudent.getStudentId());
-
-            listNumbers++;
-        }
-
-        StringBuilder sb = new StringBuilder(students);
-
-        sb.deleteCharAt(students.length() - 1);
-
-        System.out.println("\nGradable Students:\n" + CliApplication.sectionString(sb.toString()));
-
-        return studentIds;
     }
 
 

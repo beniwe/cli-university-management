@@ -70,11 +70,11 @@ public class Session implements Screen {
       }
 
       else if (choice.equals("5")) {
-
+        return;
       }
 
-      else if (choice.equals("6")) {
-        return;
+      else if (professor.getIsAdmin() && choice.equals("6")) {
+
       }
 
       else if (professor.getIsAdmin() && choice.equals("7")) {
@@ -82,10 +82,6 @@ public class Session implements Screen {
       }
 
       else if (professor.getIsAdmin() && choice.equals("8")) {
-
-      }
-
-      else if (professor.getIsAdmin() && choice.equals("9")) {
 
       }
 
@@ -157,15 +153,14 @@ public class Session implements Screen {
           "(1) Account Details\n"
               // display courses, assign CA, grade and remove students
               + "(2) Course Management\n"
-              + "(3) Assign Course Assistant\n"
-              + "(4) Occupy a Course\n"
-              + "(5) Delete Account\n"
-              + "(6) Exit\n\n"
+              + "(3) Occupy a Course\n"
+              + "(4) Delete Account\n"
+              + "(5) Exit\n\n"
 
               + "Admin Options:\n"
-              + "(7) Register Professor\n"
-              + "(8) Assign Admin\n"
-              + "(9) Remove Professor";
+              + "(6) Register Professor\n"
+              + "(7) Assign Admin\n"
+              + "(8) Remove Professor";
 
 
 
@@ -173,10 +168,9 @@ public class Session implements Screen {
       menu +=
           "(1) Account Details\n"
               + "(2) Course Management\n"
-              + "(3) Assign Course Assistant\n"
-              + "(4) Occupy a Course\n"
-              + "(5) Delete Account\n"
-              + "(6) Exit";
+              + "(3) Occupy a Course\n"
+              + "(4) Delete Account\n"
+              + "(5) Exit";
     }
 
     System.out.println("\nMenu:\n" + CliApplication.sectionString(menu));

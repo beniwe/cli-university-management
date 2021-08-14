@@ -2,6 +2,7 @@ package cli.screens;
 
 import cli.CliApplication;
 import cli.screens.assistantScreens.AssistantGradingScreen;
+import cli.screens.assistantScreens.AssistantRemoveScreen;
 import org.example.models.tables.pojos.Course;
 import org.example.models.tables.pojos.Professor;
 import org.example.models.tables.pojos.Student;
@@ -51,6 +52,19 @@ public class CourseManagementScreen implements Screen{
 
                 continue;
             }
+        }
+
+        var repository = new PostgreSqlStudentRepository(PostgresConnectionFactory.build());
+        var noStudentsCheck = new FindStudentQuery(repository, null);
+
+
+        try {
+            noStudentsCheck.getStudentsInCourse(courseId);
+        } catch (NoSuchElementException e) {
+            System.out.println(e.getMessage());
+
+            in.nextLine();
+            return;
         }
 
         while (true) {
@@ -129,6 +143,12 @@ public class CourseManagementScreen implements Screen{
 
             if (optionChoice == 3) {
                 //remove
+                var removeMethode = new AssistantRemoveScreen(null);
+
+                removeMethode.cliRemoving(in, courseId);
+
+                in.nextLine();
+                return;
             }
 
             if (optionChoice == 4) {
