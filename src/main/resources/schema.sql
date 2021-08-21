@@ -71,7 +71,7 @@ insert into student(name, birth_date, enrolled_in, enrolled_since, password, is_
 values('Elias Pinter', '2002-06-02', 2, '2021-01-01', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', false);
 
 insert into student(name, birth_date, enrolled_in, enrolled_since, password, is_course_assistant)
-values('Thomas Mayerl', '2000-08-01', 4, '2021-01-01', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', false);
+values('Thomas Mayerl', '2000-08-01', 4, '2021-01-01', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', true);
 
 insert into student(name, birth_date, enrolled_in, enrolled_since, password, is_course_assistant)
 values('Benjamin Auinger', '1998-05-23', 1, '2021-01-01', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', false);
@@ -100,26 +100,26 @@ insert into student_course(fk_student_id, fk_course_id, is_course_assistant)
 values(10000000, 6, true);
 
 insert into student_course(fk_student_id, fk_course_id, is_course_assistant)
-values(10000000, 7, false);
+values(10000000, 8, false);
 
 insert into student_course(fk_student_id, fk_course_id, is_course_assistant)
 values(10000001, 1, false);
 
 insert into student_course(fk_student_id, fk_course_id, is_course_assistant)
-values(10000001, 7, false);
+values(10000001, 8, false);
 
 
 insert into student_course(fk_student_id, fk_course_id, is_course_assistant)
 values(10000002, 1, true);
 
 insert into student_course(fk_student_id, fk_course_id, is_course_assistant)
-values(10000002, 7, false);
+values(10000002, 8, false);
 
 insert into student_course(fk_student_id, fk_course_id, is_course_assistant)
 values(10000003, 1, false);
 
 insert into student_course(fk_student_id, fk_course_id, is_course_assistant)
-values(10000003, 7, false);
+values(10000003, 8, false);
 
 
 

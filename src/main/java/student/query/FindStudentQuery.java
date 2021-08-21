@@ -126,6 +126,7 @@ public class FindStudentQuery implements Query<Optional<Student>> {
     if (records.isEmpty()) {
       throw new NoSuchElementException("(!) No students enrolled in this course");
     }
+
     for (StudentCourseRecord currRecord : records) {
       var repository = new PostgreSqlStudentRepository(sql);
       var findStudent = new FindStudentQuery(repository, currRecord.getFkStudentId());
@@ -149,7 +150,7 @@ public class FindStudentQuery implements Query<Optional<Student>> {
     var sql = PostgresConnectionFactory.build();
     var studentCourseRecord = sql.fetchOne(STUDENT_COURSE, STUDENT_COURSE.FK_STUDENT_ID.eq(studentId), STUDENT_COURSE.FK_COURSE_ID.eq(courseId));
 
-    if (studentCourseRecord.getGrade() != null) {
+    if (studentCourseRecord.getIsCourseAssistant() == true) {
       return true;
     }
 

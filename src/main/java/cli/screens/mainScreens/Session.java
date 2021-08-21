@@ -1,17 +1,23 @@
 package cli.screens.mainScreens;
 
 import cli.CliApplication;
-import cli.screens.CourseEnrollScreen;
-import cli.screens.CourseManagementScreen;
-import cli.screens.Screen;
+import cli.screens.*;
+import cli.screens.adminScreen.AssignAdminScreen;
+import cli.screens.adminScreen.DeleteProfessorScreen;
+import cli.screens.adminScreen.ProfessorRegisterScreen;
 import cli.screens.assistantScreens.AssistantGradingScreen;
 import cli.screens.assistantScreens.AssistantRemoveScreen;
+import cli.screens.professorScreen.CourseManagementScreen;
+import cli.screens.professorScreen.OccupyCourseScreen;
+import cli.screens.studentScreen.CourseEnrollScreen;
+import professor.command.DeleteProfessorCommand;
 import org.example.models.tables.pojos.Course;
 import org.example.models.tables.pojos.DegreeProgram;
 import org.example.models.tables.pojos.Professor;
 import org.example.models.tables.pojos.Student;
 import professor.query.FindProfessorQuery;
 import professor.storage.PostgreSqlProfessorRepository;
+import professor.storage.ProfessorRepository;
 import storage.PostgresConnectionFactory;
 import student.NoGradeException;
 import student.query.FindCoursesQuery;
@@ -44,6 +50,8 @@ public class Session implements Screen {
   }
 
   private void professorSession(Scanner in) {
+    ProfessorRepository professorRepository = new PostgreSqlProfessorRepository(PostgresConnectionFactory.build());
+
     System.out.println("Hello " + professor.getName());
 
     while(true) {
@@ -62,11 +70,15 @@ public class Session implements Screen {
       }
 
       else if (choice.equals("3")){
+        OccupyCourseScreen occupyCourse = new OccupyCourseScreen(professor);
 
+        occupyCourse.show(in);
       }
 
       else if (choice.equals("4")) {
+        var deleteProfessor = new DeleteProfessorCommand(professorRepository, professor.getProfessorId());
 
+        deleteProfessor.execute();
       }
 
       else if (choice.equals("5")) {
@@ -74,15 +86,21 @@ public class Session implements Screen {
       }
 
       else if (professor.getIsAdmin() && choice.equals("6")) {
+        ProfessorRegisterScreen registerProfessor = new ProfessorRegisterScreen();
 
+        registerProfessor.show(in);
       }
 
       else if (professor.getIsAdmin() && choice.equals("7")) {
+        AssignAdminScreen assignAdmin = new AssignAdminScreen(professor);
 
+        assignAdmin.show(in);
       }
 
       else if (professor.getIsAdmin() && choice.equals("8")) {
+        DeleteProfessorScreen deleteProfessor = new DeleteProfessorScreen(professor);
 
+        deleteProfessor.show(in);
       }
 
       else {
@@ -92,6 +110,8 @@ public class Session implements Screen {
   }
 
   private void studentSession(Scanner in) {
+    StudentRepository studentRepository = new PostgreSqlStudentRepository(PostgresConnectionFactory.build());
+
     System.out.println("Hello " + student.getName());
 
     while(true) {
@@ -117,9 +137,8 @@ public class Session implements Screen {
       }
 
       else if (choice.equals("4")) {
-        StudentRepository repository = new PostgreSqlStudentRepository(PostgresConnectionFactory.build());
 
-        repository.remove(student.getStudentId());
+        studentRepository.remove(student.getStudentId());
         System.out.println("(!) You are now no longer in the System");
 
         return;

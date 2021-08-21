@@ -1,6 +1,7 @@
-package cli.screens;
+package cli.screens.professorScreen;
 
 import cli.CliApplication;
+import cli.screens.Screen;
 import cli.screens.assistantScreens.AssistantGradingScreen;
 import cli.screens.assistantScreens.AssistantRemoveScreen;
 import org.example.models.tables.pojos.Course;
@@ -8,12 +9,13 @@ import org.example.models.tables.pojos.Professor;
 import org.example.models.tables.pojos.Student;
 import professor.query.ProfessorCourseQuery;
 import storage.PostgresConnectionFactory;
+import student.command.AssignAssistantCommand;
 import student.query.FindStudentQuery;
 import student.storage.PostgreSqlStudentRepository;
 
 import java.util.*;
 
-public class CourseManagementScreen implements Screen{
+public class CourseManagementScreen implements Screen {
     private Professor professor;
 
     public CourseManagementScreen(Professor professor) {
@@ -27,7 +29,6 @@ public class CourseManagementScreen implements Screen{
         int courseChoice;
         int optionChoice;
         int studentChoice;
-        int grade;
 
         while (true) {
             List<Integer> courseIds = printProfessorCourses();
@@ -100,7 +101,7 @@ public class CourseManagementScreen implements Screen{
                 //assign course assistant
 
                 while (true) {
-                    List<Long> studentIds = null;
+                    List<Long> studentIds;
 
                     try {
                         studentIds = printNonAssistantStudents(courseId);
@@ -116,7 +117,6 @@ public class CourseManagementScreen implements Screen{
                         return;
                     }
 
-
                     System.out.print("Student: ");
 
                     try {
@@ -131,6 +131,7 @@ public class CourseManagementScreen implements Screen{
                     if (studentChoice >= 1 && studentChoice <= studentIds.size()) {
                         studentId = studentIds.get(studentChoice - 1);
 
+                        System.out.println("test");
                         break;
 
                     } else {
@@ -139,6 +140,12 @@ public class CourseManagementScreen implements Screen{
                         continue;
                     }
                 }
+
+                AssignAssistantCommand assignAssistant = new AssignAssistantCommand(PostgresConnectionFactory.build(), studentId, courseId);
+
+                assignAssistant.execute();
+
+                return;
             }
 
             if (optionChoice == 3) {
@@ -161,9 +168,6 @@ public class CourseManagementScreen implements Screen{
                 continue;
             }
         }
-
-
-
     }
 
     public List<Integer> printProfessorCourses() {
@@ -193,9 +197,9 @@ public class CourseManagementScreen implements Screen{
     }
 
     public void printOptions() {
-        String options = "(1) Grade a student\n" +
+        String options = "(1) Grade a Student\n" +
                 "(2) Assign Course Assistant\n" +
-                "(3) Remove a student\n" +
+                "(3) Remove a Student\n" +
                 "(4) Exit";
 
 
