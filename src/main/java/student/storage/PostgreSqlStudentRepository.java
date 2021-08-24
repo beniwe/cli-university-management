@@ -1,31 +1,24 @@
 package student.storage;
 
-import static org.example.models.Tables.*;
-import static org.jooq.impl.DSL.max;
+import command.RecordToTableElement;
+import org.example.models.tables.pojos.Course;
+import org.example.models.tables.pojos.Student;
+import org.jooq.DSLContext;
+import org.jooq.exception.DataAccessException;
+import student.query.FindCoursesQuery;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import org.example.models.tables.pojos.Student;
-import org.example.models.tables.records.StudentRecord;
-import org.jooq.DSLContext;
-import org.jooq.exception.DataAccessException;
+
+import static org.example.models.Tables.STUDENT;
+import static org.example.models.Tables.STUDENT_COURSE;
+import static org.jooq.impl.DSL.max;
 
 public class PostgreSqlStudentRepository implements StudentRepository {
   private final DSLContext sql;
 
   public PostgreSqlStudentRepository(DSLContext sql) {
     this.sql = sql;
-  }
-
-  private static Student recordToStudent(StudentRecord record) {
-    return new Student(
-        record.getStudentId(),
-        record.getName(),
-        record.getBirthDate(),
-        record.getEnrolledIn(),
-        record.getEnrolledSince(),
-        record.getPassword(),
-        record.getIsCourseAssistant());
   }
 
   @Override
@@ -35,11 +28,13 @@ public class PostgreSqlStudentRepository implements StudentRepository {
       return Optional.empty();
     }
 
-    return Optional.of(recordToStudent(student));
+    return Optional.of(RecordToTableElement.recordToStudent(student));
   }
 
   @Override
   public Student enroll(Student student) throws DataAccessException {
+
+
     var record =
         sql.insertInto(
                 STUDENT,
@@ -61,7 +56,7 @@ public class PostgreSqlStudentRepository implements StudentRepository {
 
     System.out.println("Your ID is: " + getMaxStudentId());
 
-    return recordToStudent(record);
+    return RecordToTableElement.recordToStudent(record);
   }
 
   private Long getMaxStudentId() {
@@ -77,12 +72,52 @@ public class PostgreSqlStudentRepository implements StudentRepository {
   @Override
   public Student remove(Long id) {
 
+    sql.deleteFrom(STUDENT_COURSE).where(STUDENT_COURSE.FK_STUDENT_ID.eq(id)).execute();
+
     var toRemove =
         sql.deleteFrom(STUDENT)
             .where(STUDENT.STUDENT_ID.eq(id))
             .returning(STUDENT.asterisk())
             .fetchOne();
 
-    return this.recordToStudent(toRemove);
+    return RecordToTableElement.recordToStudent(toRemove);
+  }
+
+  public void addStudentToCourse(Student student, Course course) {
+    sql.insertInto(
+            STUDENT_COURSE,
+            STUDENT_COURSE.FK_STUDENT_ID,
+            STUDENT_COURSE.FK_COURSE_ID,
+            STUDENT_COURSE.IS_COURSE_ASSISTANT)
+    .values(
+            student.getStudentId(),
+            course.getCourseId(),
+            false
+    ).execute();
+
+    System.out.println("You are now enrolled in: " + course.getName());
+  }
+
+  public void grading(Long studentId, Integer courseId, int grade) {
+    sql.update(STUDENT_COURSE).
+            set(STUDENT_COURSE.GRADE, grade).
+            where(STUDENT_COURSE.FK_STUDENT_ID.eq(studentId),
+                    STUDENT_COURSE.FK_COURSE_ID.eq(courseId)).
+            execute();
+
+    Student student = findStudentById(studentId).get();
+
+    FindCoursesQuery coursesQuery = new FindCoursesQuery(sql, null);
+
+    Course course = coursesQuery.findCourseById(courseId).get();
+
+    System.out.println("\n" + student.getName() + " has been graded (" + grade + ") in course: " + course.getName());
+  }
+
+  public void removeFromCourse(Long studentId, int courseId) {
+    sql.deleteFrom(STUDENT_COURSE).
+            where(STUDENT_COURSE.FK_STUDENT_ID.eq(studentId),
+                    STUDENT_COURSE.FK_COURSE_ID.eq(courseId)).
+            execute();
   }
 }

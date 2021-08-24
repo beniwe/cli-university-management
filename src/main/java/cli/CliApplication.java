@@ -1,28 +1,24 @@
 package cli;
 
-import cli.screens.LoginScreen;
-import cli.screens.RegisterScreen;
-import java.util.Scanner;
-
+import cli.screens.mainScreens.LoginScreen;
+import cli.screens.mainScreens.StudentRegisterScreen;
 import org.jooq.DSLContext;
 import student.storage.PostgreSqlStudentRepository;
-import student.storage.StudentRepository;
+
+import java.util.Scanner;
 
 public class CliApplication implements Runnable {
   private final LoginScreen loginScreen;
-  private final RegisterScreen registerScreen;
+  private final StudentRegisterScreen studentRegisterScreen;
 
   public CliApplication(DSLContext sql) {
-    this.registerScreen = new RegisterScreen(new PostgreSqlStudentRepository(sql));
+    this.studentRegisterScreen = new StudentRegisterScreen(new PostgreSqlStudentRepository(sql));
     this.loginScreen = new LoginScreen(sql);
   }
 
   void printMenu() {
     System.out.println("\nMenu");
-    System.out.println(sectionString(
-            "1) Login\n" +
-            "2) Register (students only)\n" +
-            "3) Exit"));
+    System.out.println(sectionString("1) Login\n" + "2) Register (students only)\n" + "3) Exit"));
   }
 
   void exit() {
@@ -32,20 +28,25 @@ public class CliApplication implements Runnable {
   @Override
   public void run() {
     try (Scanner in = new Scanner(System.in)) {
+      String choice = null;
+
       while (true) {
-        printMenu();
-        var choice = in.nextInt();
-        in.nextLine();
-        if (choice == 1) {
+        if (choice != "") {
+          printMenu();
+        }
+
+        choice = in.nextLine();
+
+        if (choice.equals("1")) {
           loginScreen.show(in);
-
-        } else if (choice == 2) {
-          this.registerScreen.show(in);
-
-        } else if (choice == 3) {
+        } else if (choice.equals("2")) {
+          this.studentRegisterScreen.show(in);
+        } else if (choice.equals("3")) {
           exit();
+        } else if (choice.equals("")) {
+          continue;
         } else {
-          System.err.println("Invalid input.");
+          System.err.println("(!) Invalid input.");
         }
       }
     }
@@ -63,11 +64,11 @@ public class CliApplication implements Runnable {
         currLength = 0;
       }
 
-      currLength++;
-
       if (currLength > maxLength) {
         maxLength = currLength;
       }
+
+      currLength++;
     }
 
     for (int i = 0; i < maxLength; i++) {

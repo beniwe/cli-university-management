@@ -1,11 +1,10 @@
 package authentication;
 
-import authentication.User;
-import cli.screens.Session;
+import cli.screens.mainScreens.Session;
 import org.example.models.tables.pojos.Professor;
 import org.example.models.tables.pojos.Student;
 import org.jooq.DSLContext;
-import professor.PostgreSqlProfessorRepository;
+import professor.storage.PostgreSqlProfessorRepository;
 import student.command.EnrollStudentCommand;
 import student.storage.PostgreSqlStudentRepository;
 
@@ -20,7 +19,6 @@ public class Authenticate {
     this.hashedPassword = EnrollStudentCommand.SHAHash(password);
   }
 
-
   public Session execute() {
     Professor professor;
     Student student;
@@ -30,9 +28,7 @@ public class Authenticate {
       professor = new Professor(professorLoginCheck(id, hashedPassword));
 
       session = new Session(professor);
-    }
-
-    else {
+    } else {
       student = new Student(studentLoginCheck(id, hashedPassword));
 
       session = new Session(student);

@@ -1,10 +1,10 @@
 package student.storage;
 
-import student.StudentAlreadyEnrolledException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.example.models.tables.pojos.Student;
+import student.StudentAlreadyEnrolledException;
 
 public class InMemoryStudentRepository implements StudentRepository {
   private final List<Student> students;
@@ -60,7 +60,6 @@ public class InMemoryStudentRepository implements StudentRepository {
     }
     return null;
   }
-
 
   private Long getMaxStudentId() {
     Long maxId = students.get(0).getStudentId();

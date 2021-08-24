@@ -1,15 +1,18 @@
 package student.query;
 
-import student.StudentAlreadyEnrolledException;
-import java.time.LocalDate;
 import org.example.models.tables.pojos.Student;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import storage.PostgresConnectionFactory;
+import student.StudentAlreadyEnrolledException;
 import student.storage.InMemoryStudentRepository;
+
+import java.time.LocalDate;
 
 class FindStudentQueryTest {
   @Test
   void execute() {
+    var sql = PostgresConnectionFactory.build();
     var repository = new InMemoryStudentRepository();
     var expectedId = 12345678l;
     var expectedName = "Max Mustermann";

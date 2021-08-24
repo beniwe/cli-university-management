@@ -1,8 +1,8 @@
 package student.storage;
 
-import student.StudentAlreadyEnrolledException;
 import java.util.Optional;
 import org.example.models.tables.pojos.Student;
+import student.StudentAlreadyEnrolledException;
 
 public interface StudentRepository {
   Optional<Student> findStudentById(Long id);
